@@ -1,0 +1,88 @@
+#formulario-cyberpunk {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #1b1b32;
+  color: #0ff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(15, 255, 255, 0.3);
+}
+
+.input-cyberpunk {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #0ff;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background-color: rgba(0, 255, 255, 0.1);
+  color: #0ff;
+}
+
+.button-cyberpunk {
+  background-color: #ff2e63;
+  color: #0ff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-cyberpunk:hover {
+  background-color: #ff4f92;
+}
+
+.mensaje-error-cyberpunk {
+  color: #ff2e63;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ff2e63;
+  border-radius: 4px;
+  background-color: rgba(255, 46, 99, 0.1);
+  font-size: 14px;
+  text-align: center;
+}
+#formulario-cyberpunk {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #1b1b32;
+  color: #0ff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(15, 255, 255, 0.3);
+}
+
+.input-cyberpunk {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #0ff;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background-color: rgba(0, 255, 255, 0.1);
+  color: #0ff;
+}
+
+.button-cyberpunk {
+  background-color: #ff2e63;
+  color: #0ff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-cyberpunk:hover {
+  background-color: #ff4f92;
+}
+
+.mensaje-error-cyberpunk {
+  color: #ff2e63;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ff2e63;
+  border-radius: 4px;
+  background-color: rgba(255, 46, 99, 0.1);
+  font-size: 14px;
+  text-align: center;
+}
