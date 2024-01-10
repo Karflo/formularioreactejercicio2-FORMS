@@ -5,9 +5,12 @@ import './CustomFooter.css'
 function CustomFooter (){
     return(
         <>
+        <footer>
         <div>
             <p>Footer</p>
         </div>
+        </footer>
+
         </>
     )
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ApiCrud.css';
+import { Container, Form, Button, Card } from 'react-bootstrap';
 
 const ApiCrud = () => {
   const urlJSON = 'http://localhost:3000/users';
@@ -93,96 +94,126 @@ const ApiCrud = () => {
       });
   };
 
+  
   return (
-    <>
-      <div>
-        <label>
-          Nombre:
-          <input
-            type="text"
-            value={nuevoUsuario.name}
-            onChange={(e) =>
-              setNuevoUsuario({ ...nuevoUsuario, name: e.target.value })
-            }
-          />
-        </label>
-        <label>
-          Usuario:
-          <input
-            type="text"
-            value={nuevoUsuario.username}
-            onChange={(e) =>
-              setNuevoUsuario({ ...nuevoUsuario, username: e.target.value })
-            }
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="text"
-            value={nuevoUsuario.email}
-            onChange={(e) =>
-              setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })
-            }
-          />
-        </label>
-        <button onClick={introducirUsuario}>Agregar</button>
-      </div>
+    <Container fluid className="p-3 my-5 contenedorApi">
+      <Card>
+        <Card.Body>
+          <Form>
+            <Form.Group controlId="formName">
+              <Form.Label>Nombre:</Form.Label>
+              <Form.Control
+                type="text"
+                value={nuevoUsuario.name}
+                onChange={(e) =>
+                  setNuevoUsuario({ ...nuevoUsuario, name: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId="formUsername">
+              <Form.Label>Usuario:</Form.Label>
+              <Form.Control
+                type="text"
+                value={nuevoUsuario.username}
+                onChange={(e) =>
+                  setNuevoUsuario({ ...nuevoUsuario, username: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId="formEmail">
+              <Form.Label>Email:</Form.Label>
+              <Form.Control
+                type="text"
+                value={nuevoUsuario.email}
+                onChange={(e) =>
+                  setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Button variant="primary" onClick={introducirUsuario}>
+              Agregar
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
+
       <br />
 
       {usuarios &&
         usuarios.map((usuario, index) => (
-          <div key={index}>
-            <p>Nombre: {usuario.name} </p>
-            <p>Usuario: {usuario.username}</p>
-            <p>Email: {usuario.email}</p>
-            <button onClick={() => borrarUsuario(usuario.id)}>Eliminar</button>
-            <button onClick={() => editarUsuarioFormulario(usuario.id)}>Editar</button>
-
-            <p>-----------</p>
-          </div>
+          <Card key={index}>
+            <Card.Body>
+              <p>Nombre: {usuario.name} </p>
+              <p>Usuario: {usuario.username}</p>
+              <p>Email: {usuario.email}</p>
+              <Button
+                variant="danger"
+                onClick={() => borrarUsuario(usuario.id)}
+              >
+                Eliminar
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => editarUsuarioFormulario(usuario.id)}
+              >
+                Editar
+              </Button>
+            </Card.Body>
+          </Card>
         ))}
-{/** En el caso de que tenga un usuario para editar, muestro el otro formulario */}
-      {editarUsuario && ( 
-        <div>
-          <h2>Editar Usuario</h2>
-          <label>
-            Nombre:
-            <input
-              type="text"
-              value={editarUsuario.name}
-              onChange={(e) =>
-                setEditarUsuario({ ...editarUsuario, name: e.target.value })
-              }
-            />
-          </label>
-          <label>
-            Usuario:
-            <input
-              type="text"
-              value={editarUsuario.username}
-              onChange={(e) =>
-                setEditarUsuario({
-                  ...editarUsuario,
-                  username: e.target.value,
-                })
-              }
-            />
-          </label>
-          <label>
-            Email:
-            <input
-              type="text"
-              value={editarUsuario.email}
-              onChange={(e) =>
-                setEditarUsuario({ ...editarUsuario, email: e.target.value })
-              }
-            />
-          </label>
-          <button onClick={actualizarUsuario}>Actualizar</button>
-        </div>
+
+      {editarUsuario && (
+        <Card>
+          <Card.Body>
+            <h2>Editar Usuario</h2>
+            <Form>
+              <Form.Group controlId="formEditName">
+                <Form.Label>Nombre:</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editarUsuario.name}
+                  onChange={(e) =>
+                    setEditarUsuario({
+                      ...editarUsuario,
+                      name: e.target.value,
+                    })
+                  }
+                />
+              </Form.Group>
+              <Form.Group controlId="formEditUsername">
+                <Form.Label>Usuario:</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editarUsuario.username}
+                  onChange={(e) =>
+                    setEditarUsuario({
+                      ...editarUsuario,
+                      username: e.target.value,
+                    })
+                  }
+                />
+              </Form.Group>
+              <Form.Group controlId="formEditEmail">
+                <Form.Label>Email:</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editarUsuario.email}
+                  onChange={(e) =>
+                    setEditarUsuario({
+                      ...editarUsuario,
+                      email: e.target.value,
+                    })
+                  }
+                />
+              </Form.Group>
+              <Button variant="primary" onClick={actualizarUsuario}>
+                Actualizar
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
       )}
-    </>
+    </Container>
   );
 };
 

@@ -55,7 +55,7 @@ function Login() {
     <div>
       <p>¿Como quiere ser llamado?</p>
       <MDBRadio name='inlineRadio' id='inlineRadio1' label='Sr' inline  onChange={manejarValoreslogin} value={valoresLogin.tratamiento}/>
-      <MDBRadio name='inlineRadio' id='inlineRadio2' label='Sra'  inline  onChange={manejarValoreslogin} value={valoresLogin.tratamiento} /> 
+      <MDBRadio name='inlineRadio' id='inlineRadio' label='Sra'  inline  onChange={manejarValoreslogin} value={valoresLogin.tratamiento} /> 
     </div>
     <MDBBtn className="mb-4 w-100" size="lg" type='submit'>Registrate</MDBBtn>
 
