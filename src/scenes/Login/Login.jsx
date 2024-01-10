@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import Barranavegacion from '../Barranavegacion/Barranavegacion'
-import { MDBContainer, MDBCol, MDBRow, MDBBtn, MDBIcon, MDBRadio, MDBInput, MDBCheckbox } from 'mdb-react-ui-kit';
+import { MDBContainer, MDBCol, MDBRow, MDBBtn, MDBRadio, MDBInput } from 'mdb-react-ui-kit';
 import './Login.css';
 import { Iniciar } from '../Props/Props';
 
@@ -37,7 +36,6 @@ function Login() {
 
   return (
     <div>
-<Barranavegacion />
 <MDBContainer fluid className="p-3 my-5">
 
 <MDBRow>

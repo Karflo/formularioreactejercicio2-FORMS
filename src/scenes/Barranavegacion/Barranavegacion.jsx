@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
 
 function Barranavegacion() { // Genero una barra de navegacion gracias a Boostrap y boostrap-react-dom, con {Link redirijo a /registro que me manda a formulario}
+  console.log("Renderizando contenido")
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>

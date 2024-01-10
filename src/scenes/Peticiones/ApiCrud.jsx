@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import './ApiCrud.css';
 
 const ApiCrud = () => {
   const urlJSON = 'http://localhost:3000/users';
-  const [usuarios, setUsuarios] = useState(null); //Creo un setState para la lista de los usuarios
-  const [editarUsuario, setUsuarioeditar] = useState(null); // Creo un setState para el usuario a editar
-  const [nuevoUsuario, setNuevoUsuario] = useState({ //Creo un nuevoUsuario para poder gestionar con el metodo POST
+  const [usuarios, setUsuarios] = useState(null);
+  const [editarUsuario, setEditarUsuario] = useState(null);
+  const [nuevoUsuario, setNuevoUsuario] = useState({
     name: '',
     username: '',
     email: '',
   });
 
-
-
-  useEffect(() => { //Al cargar, realizará el GET del JSON
+  useEffect(() => {
     fetch(urlJSON)
       .then((response) => response.json())
       .then((usuario) => {
@@ -21,29 +20,26 @@ const ApiCrud = () => {
       .catch(console.log);
   }, []);
 
-//--------------------------------------------
-
   const borrarUsuario = (userId) => {
     fetch(`${urlJSON}/${userId}`, {
       method: 'DELETE',
     })
       .then((response) => {
-        if (response.ok) { //En el caso de que el metodo sea aceptado, retornara un fetch con el JSON designado para seguir operando, si no lanzará error
+        if (response.ok) {
           return fetch(urlJSON);
         }
       })
       .then((response) => response.json())
-      .then((usuariosRestantes) => {  
-        setUsuarios(usuariosRestantes); //Esta peticion que sigue realizará de que tome el nuevo JSON borrado y lo actualice
-        console.log('Usuario eliminado con éxito');
+      .then((usuariosRestantes) => {
+        setUsuarios(usuariosRestantes);
       })
       .catch((error) => {
         console.error(error);
       });
   };
-//----------------------------------------------------
-  const introducirUsuario = () => { //Metodo post vinculado al formulario que realiza la peticion al JSON
-    fetch(urlJSON, { 
+
+  const introducirUsuario = () => {
+    fetch(urlJSON, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,34 +47,55 @@ const ApiCrud = () => {
       body: JSON.stringify(nuevoUsuario),
     })
       .then((response) => {
-        if (response.ok) { //Si es correcta, creará el usuario y retornará el JSON realizando el fectch correspondiente para el response actualizandolo
+        if (response.ok) {
           return fetch(urlJSON);
         }
       })
-      .then((response) => response.json()) //Actualizo con la respuesta del JSON
+      .then((response) => response.json())
       .then((nuevosUsuarios) => {
         setUsuarios(nuevosUsuarios);
-        setNuevoUsuario({ //Agrego al useState los valores designados que quiero agregar
+        setNuevoUsuario({
           name: '',
           username: '',
           email: '',
         });
-        console.log('Usuario creado con éxito');
       })
       .catch((error) => {
         console.error(error);
       });
   };
 
-  //-------------------------------------
+  const editarUsuarioFormulario = (userId) => { //Con la id del Usuario lo busco para poder modificarlo
+    const usuarioEditar = usuarios.find((usuario) => usuario.id === userId);
+    setEditarUsuario(usuarioEditar);
+  };
 
-
-  //-------------------------------------
+  const actualizarUsuario = () => { /*Al presiona actualizar, realizará la peticion PATCH*/ 
+    fetch(`${urlJSON}/${editarUsuario.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(editarUsuario),
+    })
+      .then((response) => {
+        if (response.ok) { // Si la respuesta es correcta, retomo el JSON
+          return fetch(urlJSON);
+        }
+      })
+      .then((response) => response.json())
+      .then((usuariosActualizados) => {
+        setUsuarios(usuariosActualizados);
+        setEditarUsuario(null); //Seteo a null para que desaparezca del set y asi poder cargar otro
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <>
-
-<div>
+      <div>
         <label>
           Nombre:
           <input
@@ -115,17 +132,56 @@ const ApiCrud = () => {
 
       {usuarios &&
         usuarios.map((usuario, index) => (
-          <div key={index}> 
+          <div key={index}>
             <p>Nombre: {usuario.name} </p>
             <p>Usuario: {usuario.username}</p>
             <p>Email: {usuario.email}</p>
             <button onClick={() => borrarUsuario(usuario.id)}>Eliminar</button>
+            <button onClick={() => editarUsuarioFormulario(usuario.id)}>Editar</button>
 
             <p>-----------</p>
           </div>
         ))}
-
-
+{/** En el caso de que tenga un usuario para editar, muestro el otro formulario */}
+      {editarUsuario && ( 
+        <div>
+          <h2>Editar Usuario</h2>
+          <label>
+            Nombre:
+            <input
+              type="text"
+              value={editarUsuario.name}
+              onChange={(e) =>
+                setEditarUsuario({ ...editarUsuario, name: e.target.value })
+              }
+            />
+          </label>
+          <label>
+            Usuario:
+            <input
+              type="text"
+              value={editarUsuario.username}
+              onChange={(e) =>
+                setEditarUsuario({
+                  ...editarUsuario,
+                  username: e.target.value,
+                })
+              }
+            />
+          </label>
+          <label>
+            Email:
+            <input
+              type="text"
+              value={editarUsuario.email}
+              onChange={(e) =>
+                setEditarUsuario({ ...editarUsuario, email: e.target.value })
+              }
+            />
+          </label>
+          <button onClick={actualizarUsuario}>Actualizar</button>
+        </div>
+      )}
     </>
   );
 };

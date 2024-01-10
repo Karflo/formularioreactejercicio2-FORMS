@@ -1,0 +1,20 @@
+/* Estilos para el header */
+header {
+    background-color: #333; /* Color de fondo del header */
+    padding: 10px; /* Espaciado interno del header */
+    text-align: center; /* Alineación del texto al centro */
+  }
+  
+  /* Estilos para los enlaces dentro del header */
+  header a {
+    color: #fff; /* Color del texto de los enlaces */
+    margin: 0 10px; /* Margen entre los enlaces */
+    text-decoration: none; /* Quitar subrayado del texto */
+    font-weight: bold; /* Texto en negrita */
+  }
+  
+  /* Estilos para los enlaces cuando están siendo hovereados */
+  header a:hover {
+    text-decoration: underline; /* Subrayado al hacer hover */
+  }
+  

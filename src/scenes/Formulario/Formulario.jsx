@@ -1,5 +1,4 @@
 import './Formulario.css';
-import Barranavegacion from '../Barranavegacion/Barranavegacion';
 import { useState } from 'react';
 import { Usuario } from '../Props/Props';
 
@@ -55,8 +54,8 @@ function Formulario(){
 
     return (
         <>
-            <Barranavegacion />
-                            <form onSubmit={manejarSubmit} id="formulario-cyberpunk">
+
+                                     <form onSubmit={manejarSubmit} id="formulario-cyberpunk">
                 <div className="mb-3">
                     <label htmlFor="tratamiento">Tratamiento</label>
                     <select
