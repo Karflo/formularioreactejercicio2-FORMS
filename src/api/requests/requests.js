@@ -38,3 +38,14 @@ export function borrar(path, id){
     .then((response) => response.json())
 
 }
+
+export function modificar(path, id){
+    return fetch(BASE_URL + path,{
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    })
+    .then((response) => response.json())
+}

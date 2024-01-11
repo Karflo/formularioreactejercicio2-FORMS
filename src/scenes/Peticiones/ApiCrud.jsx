@@ -24,11 +24,17 @@ const ApiCrud = () => {
   }, []);
 
   const borrarUsuario = (userId) => {
-    borrar(PATH,userId)
+    borrar(PATH, userId)
+      .then(() => { //En el caso de que el metodo borrar funcione devolverá el PATH
+        return get(PATH);
+      }) //Realizo una petición al set para poder actualizar la lista
+      .then((usuarios) => {
+        setUsuarios(usuarios);
+      })
       .catch((error) => {
         console.log(error);
       });
-
+      
   };
 
   const introducirUsuario = () => {
