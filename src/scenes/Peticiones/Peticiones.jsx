@@ -4,7 +4,6 @@ import ApiCrud from "./ApiCrud";
 
     return(
         <>
-        <h3>API de Crud</h3>
         <ApiCrud />
         </>
     )

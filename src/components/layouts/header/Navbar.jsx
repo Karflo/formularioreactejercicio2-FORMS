@@ -7,7 +7,7 @@ function Header(){ //Creo el header de la aplicacion con un link to PATH_LIST ha
     return(
         <header >
         
-       <Link to={PATH_LIST}>Lista</Link> 
+       <Link to={PATH_LIST}>Ejercicio Formulario</Link> 
        <Link to={PATH_FORM}>Formulario</Link> 
        <Link to={PATH_LOGIN}>Login</Link> 
         </header>
