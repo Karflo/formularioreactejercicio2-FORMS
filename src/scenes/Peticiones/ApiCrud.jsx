@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import './ApiCrud.css';
 import { Container, Form, Button, Card } from 'react-bootstrap';
+import { get, post, borrar } from '../../api/requests/requests'
 
 const ApiCrud = () => {
   const urlJSON = 'http://localhost:3000/users';
   const [usuarios, setUsuarios] = useState(null);
   const [editarUsuario, setEditarUsuario] = useState(null);
   const [nuevoUsuario, setNuevoUsuario] = useState({
-    name: '',
     username: '',
-    email: '',
+    mail: '',
+    password: '',
   });
 
+  const PATH = "/users";
+
   useEffect(() => {
-    fetch(urlJSON)
-      .then((response) => response.json())
+    get(PATH)
       .then((usuario) => {
         setUsuarios(usuario);
       })
@@ -22,57 +24,27 @@ const ApiCrud = () => {
   }, []);
 
   const borrarUsuario = (userId) => {
-    fetch(`${urlJSON}/${userId}`, {
-      method: 'DELETE',
-    })
-      .then((response) => {
-        if (response.ok) {
-          return fetch(urlJSON);
-        }
-      })
-      .then((response) => response.json())
-      .then((usuariosRestantes) => {
-        setUsuarios(usuariosRestantes);
-      })
+    borrar(PATH,userId)
       .catch((error) => {
-        console.error(error);
+        console.log(error);
       });
+
   };
 
   const introducirUsuario = () => {
-    fetch(urlJSON, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(nuevoUsuario),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return fetch(urlJSON);
-        }
-      })
-      .then((response) => response.json())
-      .then((nuevosUsuarios) => {
-        setUsuarios(nuevosUsuarios);
-        setNuevoUsuario({
-          name: '',
-          username: '',
-          email: '',
-        });
-      })
+    post(PATH, nuevoUsuario)
       .catch((error) => {
-        console.error(error);
+        console.log(error);
       });
   };
 
   const editarUsuarioFormulario = (userId) => { //Con la id del Usuario lo busco para poder modificarlo
     const usuarioEditar = usuarios.find((usuario) => usuario.id === userId);
-    setEditarUsuario(usuarioEditar);
+    setEditarUsuario(usuarioEditar); //Introduzco el usuario en setEditarUsuario
   };
 
-  const actualizarUsuario = () => { /*Al presiona actualizar, realizará la peticion PATCH*/ 
-    fetch(`${urlJSON}/${editarUsuario.id}`, {
+  const actualizarUsuario = () => { /*Al presiona actualizar, realizará la peticion PATCH*/
+    fetch(`PATH/${editarUsuario.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -94,24 +66,14 @@ const ApiCrud = () => {
       });
   };
 
-  
+
   return (
     <Container fluid className="p-3 my-5 contenedorApi">
       <Card>
         <Card.Body>
           <Form>
             <Form.Group controlId="formName">
-              <Form.Label>Nombre:</Form.Label>
-              <Form.Control
-                type="text"
-                value={nuevoUsuario.name}
-                onChange={(e) =>
-                  setNuevoUsuario({ ...nuevoUsuario, name: e.target.value })
-                }
-              />
-            </Form.Group>
-            <Form.Group controlId="formUsername">
-              <Form.Label>Usuario:</Form.Label>
+              <Form.Label>Username:</Form.Label>
               <Form.Control
                 type="text"
                 value={nuevoUsuario.username}
@@ -120,13 +82,23 @@ const ApiCrud = () => {
                 }
               />
             </Form.Group>
-            <Form.Group controlId="formEmail">
-              <Form.Label>Email:</Form.Label>
+            <Form.Group controlId="formUsername">
+              <Form.Label>Mail</Form.Label>
               <Form.Control
                 type="text"
-                value={nuevoUsuario.email}
+                value={nuevoUsuario.mail}
                 onChange={(e) =>
-                  setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })
+                  setNuevoUsuario({ ...nuevoUsuario, mail: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId="formEmail">
+              <Form.Label>Password:</Form.Label>
+              <Form.Control
+                type="text"
+                value={nuevoUsuario.password}
+                onChange={(e) =>
+                  setNuevoUsuario({ ...nuevoUsuario, password: e.target.value })
                 }
               />
             </Form.Group>
@@ -143,9 +115,8 @@ const ApiCrud = () => {
         usuarios.map((usuario, index) => (
           <Card key={index}>
             <Card.Body>
-              <p>Nombre: {usuario.name} </p>
-              <p>Usuario: {usuario.username}</p>
-              <p>Email: {usuario.email}</p>
+              <p>Nombre: {usuario.username} </p>
+              <p>Email: {usuario.mail}</p>
               <Button
                 variant="danger"
                 onClick={() => borrarUsuario(usuario.id)}
