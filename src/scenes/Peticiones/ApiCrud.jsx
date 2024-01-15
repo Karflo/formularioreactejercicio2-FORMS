@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './ApiCrud.css';
 import { Container, Form, Button, Card } from 'react-bootstrap';
-import { get, post, borrar } from '../../api/requests/requests'
+import { get, post, borrar, modificar } from '../../api/requests/requests'
 
 const ApiCrud = () => {
-  const urlJSON = 'http://localhost:3000/users';
   const [usuarios, setUsuarios] = useState(null);
   const [editarUsuario, setEditarUsuario] = useState(null);
   const [nuevoUsuario, setNuevoUsuario] = useState({
@@ -49,24 +48,12 @@ const ApiCrud = () => {
     setEditarUsuario(usuarioEditar); //Introduzco el usuario en setEditarUsuario
   };
 
-  const actualizarUsuario = () => { /*Al presiona actualizar, realizará la peticion PATCH*/
-    fetch(`PATH/${editarUsuario.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(editarUsuario),
-    })
-      .then((response) => {
-        if (response.ok) { // Si la respuesta es correcta, retomo el JSON
-          return fetch(urlJSON);
-        }
-      })
-      .then((response) => response.json())
-      .then((usuariosActualizados) => {
-        setUsuarios(usuariosActualizados);
-        setEditarUsuario(null); //Seteo a null para que desaparezca del set y asi poder cargar otro
-      })
+  const actualizarUsuario = (data) => { /*Al presiona actualizar, realizará la peticion PATCH*/
+  modificar(PATH, data)
+      //.then((usuariosActualizados) => {
+      //  setUsuarios(usuariosActualizados);
+     //   setEditarUsuario(null); //Seteo a null para que desaparezca del set y asi poder cargar otro
+      //})
       .catch((error) => {
         console.error(error);
       });
@@ -145,19 +132,6 @@ const ApiCrud = () => {
             <h2>Editar Usuario</h2>
             <Form>
               <Form.Group controlId="formEditName">
-                <Form.Label>Nombre:</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editarUsuario.name}
-                  onChange={(e) =>
-                    setEditarUsuario({
-                      ...editarUsuario,
-                      name: e.target.value,
-                    })
-                  }
-                />
-              </Form.Group>
-              <Form.Group controlId="formEditUsername">
                 <Form.Label>Usuario:</Form.Label>
                 <Form.Control
                   type="text"
@@ -170,20 +144,33 @@ const ApiCrud = () => {
                   }
                 />
               </Form.Group>
-              <Form.Group controlId="formEditEmail">
+              <Form.Group controlId="formEditUsername">
                 <Form.Label>Email:</Form.Label>
                 <Form.Control
                   type="text"
-                  value={editarUsuario.email}
+                  value={editarUsuario.mail}
                   onChange={(e) =>
                     setEditarUsuario({
                       ...editarUsuario,
-                      email: e.target.value,
+                      mail: e.target.value,
                     })
                   }
                 />
               </Form.Group>
-              <Button variant="primary" onClick={actualizarUsuario}>
+              <Form.Group controlId="formEditEmail">
+                <Form.Label>Contraseña:</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={editarUsuario.password}
+                  onChange={(e) =>
+                    setEditarUsuario({
+                      ...editarUsuario,
+                      password: e.target.value,
+                    })
+                  }
+                />
+              </Form.Group>
+              <Button variant="primary" onClick={() => actualizarUsuario(editarUsuario, editarUsuario.id)}>
                 Actualizar
               </Button>
             </Form>

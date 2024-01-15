@@ -39,13 +39,16 @@ export function borrar(path, id){
 
 }
 
-export function modificar(path, id){
-    return fetch(BASE_URL + path,{
-        method: 'DELETE',
+export function modificar(path, data){
+    return fetch(BASE_URL + path + "/" + data.id, { //Tomo la data del usuario que traigo
+        method: 'PATCH',
         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify(data),  //Realizo el metodo PATCH mandando el body mediante json y actuaulizo
+      })
+      .then((response) => {
+        response.json()
     })
-    .then((response) => response.json())
 }
