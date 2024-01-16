@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import './ApiCrud.css';
-import { Container, Form, Button, Card } from 'react-bootstrap';
-import { get, post, borrar, modificar } from '../../api/requests/requests'
+import React, { useState, useEffect } from "react";
+import "./ApiCrud.css";
+import { Container, Form, Button, Card } from "react-bootstrap";
+import { get, post, borrar, modificar } from "../../api/requests/requests";
 
 const ApiCrud = () => {
   const [usuarios, setUsuarios] = useState(null);
   const [editarUsuario, setEditarUsuario] = useState(null);
   const [nuevoUsuario, setNuevoUsuario] = useState({
-    username: '',
-    mail: '',
-    password: '',
+    username: "",
+    mail: "",
+    password: "",
   });
 
   const PATH = "/users";
@@ -20,45 +20,56 @@ const ApiCrud = () => {
         setUsuarios(usuario);
       })
       .catch(console.log);
-  }, []);
+  }, [usuarios]);
 
   const borrarUsuario = (userId) => {
     borrar(PATH, userId)
-      .then(() => { //En el caso de que el metodo borrar funcione devolverá el PATH
-        return get(PATH);
+      .then(() => {
+        const usuariosArray = get(PATH); //Obtengo la lista de usuarios
+       //Filtro en la lista de los usuarios con la id extraida de usuariosArray y lo elimino
+        const usuariosActualizados = usuariosArray.filter((usuario) => usuario.id !== userId);
+        setUsuarios(usuariosActualizados) //Actualizo con mi nuevoi array la lista 
+
       }) //Realizo una petición al set para poder actualizar la lista
-      .then((usuarios) => {
-        setUsuarios(usuarios);
-      })
       .catch((error) => {
         console.log(error);
       });
-      
   };
 
   const introducirUsuario = () => {
     post(PATH, nuevoUsuario)
+      .then(() => {
+        const newUser = [...usuarios] //Traigo el array desestructurado
+        newUser.push(nuevoUsuario) //Pusheo el nuevo usuario al final
+        setUsuarios(newUser) // Introduzco el usuario nuevo en el array
+      })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const editarUsuarioFormulario = (userId) => { //Con la id del Usuario lo busco para poder modificarlo
+  //Funcion que al mencionar el boton aplicará los datos al formulario de editar
+  const editarUsuarioFormulario = (userId) => {
+    //Con la id del Usuario lo busco para poder modificarlo
     const usuarioEditar = usuarios.find((usuario) => usuario.id === userId);
     setEditarUsuario(usuarioEditar); //Introduzco el usuario en setEditarUsuario
   };
 
-  const actualizarUsuario = (data) => { /*Al presiona actualizar, realizará la peticion PATCH*/
-  modificar(PATH, data)
-      //.then((usuariosActualizados) => {
-      //  setUsuarios(usuariosActualizados);
-     //   setEditarUsuario(null); //Seteo a null para que desaparezca del set y asi poder cargar otro
-      //})
+  //Funcion actualizar usuario que modificara el usuario solicitadoS
+  const actualizarUsuario = (data) => {
+    /*Al presiona actualizar, realizará la peticion PATCH*/
+    modificar(PATH, data) 
+    .then(() => { //Al terminar la peticion hago un map de usuarios de nuevo, comparando las ids, si coincide muestro la lista con los datos
+      usuarios.map((usuario) => usuario.id === data.userId ? { ...usuario, ...data } : usuario 
+  );
+      setEditarUsuario(null);
+    })
       .catch((error) => {
+        //
         console.error(error);
       });
+      
   };
-
 
   return (
     <Container fluid className="p-3 my-5 contenedorApi">
@@ -170,7 +181,12 @@ const ApiCrud = () => {
                   }
                 />
               </Form.Group>
-              <Button variant="primary" onClick={() => actualizarUsuario(editarUsuario, editarUsuario.id)}>
+              <Button
+                variant="primary"
+                onClick={() =>
+                  actualizarUsuario(editarUsuario, editarUsuario.id)
+                }
+              >
                 Actualizar
               </Button>
             </Form>

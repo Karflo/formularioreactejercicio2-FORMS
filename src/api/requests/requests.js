@@ -39,7 +39,7 @@ export function borrar(path, id){
 
 }
 
-export function modificar(path, data){
+export function modificar(path, data){ //Funcion modificar que modificara el usuario en cuestion
     return fetch(BASE_URL + path + "/" + data.id, { //Tomo la data del usuario que traigo
         method: 'PATCH',
         headers: {
