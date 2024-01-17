@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./ApiCrud.css";
-import { Container, Form, Button, Card } from "react-bootstrap";
+import { Container, Form, Button, Card, Row, Col } from "react-bootstrap";
 import { get, post, borrar, modificar } from "../../api/requests/requests";
 
 const ApiCrud = () => {
@@ -13,6 +13,8 @@ const ApiCrud = () => {
   });
 
   const PATH = "/users";
+  const PATHPOST = "/post";
+  const PATHCOMMENTS = "/comentarios";
 
   useEffect(() => {
     get(PATH)
@@ -20,7 +22,7 @@ const ApiCrud = () => {
         setUsuarios(usuario);
       })
       .catch(console.log);
-  }, [usuarios]);
+  }, []);
 
   const borrarUsuario = (userId) => {
     borrar(PATH, userId)
@@ -48,18 +50,20 @@ const ApiCrud = () => {
       });
   };
 
-  //Funcion que al mencionar el boton aplicará los datos al formulario de editar
+
+  /* 
+   Funcion que al mencionar el boton aplicará los datos al formulario de editar
   const editarUsuarioFormulario = (userId) => {
-    //Con la id del Usuario lo busco para poder modificarlo
+    Con la id del Usuario lo busco para poder modificarlo
     const usuarioEditar = usuarios.find((usuario) => usuario.id === userId);
-    setEditarUsuario(usuarioEditar); //Introduzco el usuario en setEditarUsuario
+    setEditarUsuario(usuarioEditar); Introduzco el usuario en setEditarUsuario
   };
 
-  //Funcion actualizar usuario que modificara el usuario solicitadoS
+  Funcion actualizar usuario que modificara el usuario solicitadoS
   const actualizarUsuario = (data) => {
-    /*Al presiona actualizar, realizará la peticion PATCH*/
+    Al presiona actualizar, realizará la peticion PATCH
     modificar(PATH, data) 
-    .then(() => { //Al terminar la peticion hago un map de usuarios de nuevo, comparando las ids, si coincide muestro la lista con los datos
+    .then(() => { Al terminar la peticion hago un map de usuarios de nuevo, comparando las ids, si coincide muestro la lista con los datos
       usuarios.map((usuario) => usuario.id === data.userId ? { ...usuario, ...data } : usuario 
   );
       setEditarUsuario(null);
@@ -69,10 +73,11 @@ const ApiCrud = () => {
         console.error(error);
       });
       
-  };
+  };*/ 
+
 
   return (
-    <Container fluid className="p-3 my-5 contenedorApi">
+<Container fluid className="p-3 contenedorApi">
       <Card>
         <Card.Body>
           <Form>
@@ -117,27 +122,46 @@ const ApiCrud = () => {
 
       {usuarios &&
         usuarios.map((usuario, index) => (
-          <Card key={index}>
+          <Card key={index} className="mt-3">
             <Card.Body>
-              <p>Nombre: {usuario.username} </p>
-              <p>Email: {usuario.mail}</p>
-              <Button
-                variant="danger"
-                onClick={() => borrarUsuario(usuario.id)}
-              >
-                Eliminar
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => editarUsuarioFormulario(usuario.id)}
-              >
-                Editar
-              </Button>
+              <Row>
+                <Col>
+                  <h5>Nombre: {usuario.username}</h5>
+                  <p>Email: {usuario.mail}</p>
+                  <Button
+                    variant="danger"
+                    className="mr-2"
+                    onClick={() => borrarUsuario(usuario.id)}
+                  >
+                    Eliminar
+                  </Button>
+                </Col>
+                <Col>
+                  <Button variant="warning">
+                    Agregar comentario
+                  </Button>
+                </Col>
+              </Row>
+              <Row className="mt-1">
+                <Col>
+                  {usuario.comentarios && usuario.comentarios.map((comentario, idx) => (
+                    <div key={idx} className="mb-2">
+                      <p><strong>Comentario {idx + 1}:</strong> {comentario}</p>
+                    </div>
+                  ))}
+                </Col>
+              </Row>
             </Card.Body>
           </Card>
         ))}
+    </Container>
+  );
+};
 
-      {editarUsuario && (
+export default ApiCrud;
+
+
+/*     {editarUsuario && (
         <Card>
           <Card.Body>
             <h2>Editar Usuario</h2>
@@ -192,9 +216,4 @@ const ApiCrud = () => {
             </Form>
           </Card.Body>
         </Card>
-      )}
-    </Container>
-  );
-};
-
-export default ApiCrud;
+      )}*/ 

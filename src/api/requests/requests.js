@@ -52,3 +52,19 @@ export function modificar(path, data){ //Funcion modificar que modificara el usu
         response.json()
     })
 }
+
+export function getPost(){
+
+}
+
+export function crearPost(){
+
+}
+
+export function borrarPost(){
+
+}
+
+export function editarPost(){
+
+}
