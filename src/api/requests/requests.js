@@ -12,8 +12,8 @@ export function get(path){ //Función que permite traer a todos los usuarios des
 
 }
 
-export function post(path,data){ //Funcion que permite postear el nuevo usuario
 
+export function post(path,data){ //Funcion que permite postear el nuevo usuario
     return fetch(BASE_URL + path,{
         method: 'POST',
         headers: {
@@ -27,8 +27,19 @@ export function post(path,data){ //Funcion que permite postear el nuevo usuario
 
 }
 
+export function borrarComentariospost(path,id){
+    return fetch(BASE_URL + path + id,{
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    })
+    .then((response) => response.json())
+}
+
 export function borrar(path, id){
-    return fetch(BASE_URL + path + "/"+ id,{
+    return fetch(BASE_URL + path + "/" + id,{
         method: 'DELETE',
         headers: {
             'Accept': 'application/json',
@@ -53,18 +64,47 @@ export function modificar(path, data){ //Funcion modificar que modificara el usu
     })
 }
 
-export function getPost(){
+export function getComentario(path, id){
+     return fetch(BASE_URL + path + + id ,{
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+    .then((response) => response.json())
 
 }
 
-export function crearPost(){
+export function crearComentario(path, data){
+    return fetch(BASE_URL + path,{
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        'body':  JSON.stringify(data), 
+        })
+        .then((response) => {
+            if (!response.ok) {
+              console.log(`Error en la solicitud: ${response.statusText}`);
+            }
+            return response.json();
+          })
+}
+
+export function borrarComentario(path, id){
+    return fetch(BASE_URL + path +  id,{
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    })
+    .then((response) => response.json())
 
 }
 
-export function borrarPost(){
-
-}
-
-export function editarPost(){
+export function editarComentario(){
 
 }

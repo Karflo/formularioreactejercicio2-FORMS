@@ -55,8 +55,7 @@ function Formulario(){
     return (
         <>
 
-<container>
-<form onSubmit={manejarSubmit} id="formulario-cyberpunk">
+        <form onSubmit={manejarSubmit} id="formulario-cyberpunk">
                 <div className="mb-3">
                     <label htmlFor="tratamiento">Tratamiento</label>
                     <select
@@ -157,7 +156,6 @@ function Formulario(){
                 </form>
 
               
-</container>
              
                 {
                 /*Genero un booleano que al darle al submit me cambia a true, como esto hace

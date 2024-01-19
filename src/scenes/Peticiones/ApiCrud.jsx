@@ -1,54 +1,68 @@
 import React, { useState, useEffect } from "react";
 import "./ApiCrud.css";
 import { Container, Form, Button, Card, Row, Col } from "react-bootstrap";
-import { get, post, borrar, modificar } from "../../api/requests/requests";
+import { get, post, borrar, modificar, borrarComentariospost } from "../../api/requests/requests";
+import Comments from "./Comments";
 
 const ApiCrud = () => {
-  const [usuarios, setUsuarios] = useState(null);
-  const [editarUsuario, setEditarUsuario] = useState(null);
-  const [nuevoUsuario, setNuevoUsuario] = useState({
-    username: "",
-    mail: "",
-    password: "",
+  const [posts, setPost] = useState(null);
+  const [editarPost, setEditarPost] = useState(null);
+  const [nuevoPost, setNuevoPost] = useState({
+    title: "",
+    text: "",
+    user_id: 239,
+
   });
 
-  const PATH = "/users";
-  const PATHPOST = "/post";
-  const PATHCOMMENTS = "/comentarios";
+//  const PATH = "/users";
+  const PATH = "/posts";
+  const PATHCOMMENT = "/posts/comment/";
 
   useEffect(() => {
     get(PATH)
-      .then((usuario) => {
-        setUsuarios(usuario);
+      .then((posts) => {
+        setPost(posts);
       })
       .catch(console.log);
   }, []);
 
-  const borrarUsuario = (userId) => {
-    borrar(PATH, userId)
-      .then(() => {
-        const usuariosArray = get(PATH); //Obtengo la lista de usuarios
-       //Filtro en la lista de los usuarios con la id extraida de usuariosArray y lo elimino
-        const usuariosActualizados = usuariosArray.filter((usuario) => usuario.id !== userId);
-        setUsuarios(usuariosActualizados) //Actualizo con mi nuevoi array la lista 
-
-      }) //Realizo una petición al set para poder actualizar la lista
-      .catch((error) => {
-        console.log(error);
-      });
+  const borrarPost = (postId) => {
+    borrarComentariospost(PATHCOMMENT,postId)
+    borrar(PATH, postId)
+    get(PATH)
+    .then((postArray) => {
+      // Now you can use postArray as an array
+      const postActualizados = postArray.filter((post) => post.id !== postId);
+      setPost(postActualizados);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   };
 
   const introducirUsuario = () => {
-    post(PATH, nuevoUsuario)
+    if (editarPost) {
+      modificar(PATH, editarPost)
+        .then(() => {
+          setNuevoPost({ title: '', text: '' , id: ''});
+          setEditarPost(null);
+          // Realizar la lógica de recarga de datos o actualización de la lista de posts
+        })
+        .catch((error) => console.error('Error al editar el post:', error));
+    } else{
+      post(PATH, nuevoPost)
       .then(() => {
-        const newUser = [...usuarios] //Traigo el array desestructurado
-        newUser.push(nuevoUsuario) //Pusheo el nuevo usuario al final
-        setUsuarios(newUser) // Introduzco el usuario nuevo en el array
+        const newPost = [...posts] //Traigo el array desestructurado
+        newPost.push(nuevoPost) //Pusheo el nuevo usuario al final
+        setPost(newPost) // Introduzco el usuario nuevo en el array
       })
       .catch((error) => {
         console.log(error);
       });
   };
+}
+
+  
 
 
   /* 
@@ -77,42 +91,40 @@ const ApiCrud = () => {
 
 
   return (
-<Container fluid className="p-3 contenedorApi">
+<Container fluid className="p-3 contenedorApi" style={{ maxWidth: "800px" }}>
       <Card>
         <Card.Body>
           <Form>
             <Form.Group controlId="formName">
-              <Form.Label>Username:</Form.Label>
+              <Form.Label>Title:</Form.Label>
               <Form.Control
                 type="text"
-                value={nuevoUsuario.username}
-                onChange={(e) =>
-                  setNuevoUsuario({ ...nuevoUsuario, username: e.target.value })
-                }
+                value={editarPost ? editarPost.title : nuevoPost.title}
+                onChange={(e) => {
+                  if (editarPost) {
+                    setEditarPost({ ...editarPost, title: e.target.value });
+                  } else {
+                    setNuevoPost({ ...nuevoPost, title: e.target.value });
+                  }
+                }}
               />
             </Form.Group>
             <Form.Group controlId="formUsername">
-              <Form.Label>Mail</Form.Label>
+              <Form.Label>Text</Form.Label>
               <Form.Control
                 type="text"
-                value={nuevoUsuario.mail}
-                onChange={(e) =>
-                  setNuevoUsuario({ ...nuevoUsuario, mail: e.target.value })
-                }
+                value={editarPost ? editarPost.text : nuevoPost.text}
+                onChange={(e) => {
+                  if (editarPost) {
+                    setEditarPost({ ...editarPost, text: e.target.value });
+                  } else {
+                    setNuevoPost({ ...nuevoPost, text: e.target.value });
+                  }
+                }}
               />
             </Form.Group>
-            <Form.Group controlId="formEmail">
-              <Form.Label>Password:</Form.Label>
-              <Form.Control
-                type="text"
-                value={nuevoUsuario.password}
-                onChange={(e) =>
-                  setNuevoUsuario({ ...nuevoUsuario, password: e.target.value })
-                }
-              />
-            </Form.Group>
-            <Button variant="primary" onClick={introducirUsuario}>
-              Agregar
+            <Button variant="primary" style={{ width: "120px" }} onClick={introducirUsuario}>
+              {editarPost ? 'Guardar Cambios' : 'Agregar Post'}
             </Button>
           </Form>
         </Card.Body>
@@ -120,37 +132,29 @@ const ApiCrud = () => {
 
       <br />
 
-      {usuarios &&
-        usuarios.map((usuario, index) => (
+      {posts &&
+        posts.map((post, index) => (
           <Card key={index} className="mt-3">
             <Card.Body>
-              <Row>
-                <Col>
-                  <h5>Nombre: {usuario.username}</h5>
-                  <p>Email: {usuario.mail}</p>
-                  <Button
-                    variant="danger"
-                    className="mr-2"
-                    onClick={() => borrarUsuario(usuario.id)}
-                  >
-                    Eliminar
-                  </Button>
-                </Col>
-                <Col>
-                  <Button variant="warning">
-                    Agregar comentario
-                  </Button>
-                </Col>
-              </Row>
-              <Row className="mt-1">
-                <Col>
-                  {usuario.comentarios && usuario.comentarios.map((comentario, idx) => (
-                    <div key={idx} className="mb-2">
-                      <p><strong>Comentario {idx + 1}:</strong> {comentario}</p>
-                    </div>
-                  ))}
-                </Col>
-              </Row>
+              <h5>Titulo: {post.title}</h5>
+              <p>Cuerpo: {post.text}</p>
+              <Button
+                variant="danger"
+                style={{ width: "120px" }}
+                className="mr-2"
+                onClick={() => borrarPost(post.id)}
+              >
+                Borrar Post
+              </Button>
+              <Button
+                variant="warning"
+                style={{ width: "120px", height: "60px" }}
+                className="mr-2"
+                onClick={() => setEditarPost({ id: post.id, title: post.title, text: post.text })}
+              >
+                modificar Post
+              </Button>
+              <Comments postId={post.id} userId={nuevoPost.user_id} pathPost={PATH} />
             </Card.Body>
           </Card>
         ))}
@@ -159,61 +163,3 @@ const ApiCrud = () => {
 };
 
 export default ApiCrud;
-
-
-/*     {editarUsuario && (
-        <Card>
-          <Card.Body>
-            <h2>Editar Usuario</h2>
-            <Form>
-              <Form.Group controlId="formEditName">
-                <Form.Label>Usuario:</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editarUsuario.username}
-                  onChange={(e) =>
-                    setEditarUsuario({
-                      ...editarUsuario,
-                      username: e.target.value,
-                    })
-                  }
-                />
-              </Form.Group>
-              <Form.Group controlId="formEditUsername">
-                <Form.Label>Email:</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editarUsuario.mail}
-                  onChange={(e) =>
-                    setEditarUsuario({
-                      ...editarUsuario,
-                      mail: e.target.value,
-                    })
-                  }
-                />
-              </Form.Group>
-              <Form.Group controlId="formEditEmail">
-                <Form.Label>Contraseña:</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editarUsuario.password}
-                  onChange={(e) =>
-                    setEditarUsuario({
-                      ...editarUsuario,
-                      password: e.target.value,
-                    })
-                  }
-                />
-              </Form.Group>
-              <Button
-                variant="primary"
-                onClick={() =>
-                  actualizarUsuario(editarUsuario, editarUsuario.id)
-                }
-              >
-                Actualizar
-              </Button>
-            </Form>
-          </Card.Body>
-        </Card>
-      )}*/ 
