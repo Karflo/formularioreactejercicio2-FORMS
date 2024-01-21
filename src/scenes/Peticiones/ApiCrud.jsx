@@ -65,31 +65,6 @@ const ApiCrud = () => {
   
 
 
-  /* 
-   Funcion que al mencionar el boton aplicará los datos al formulario de editar
-  const editarUsuarioFormulario = (userId) => {
-    Con la id del Usuario lo busco para poder modificarlo
-    const usuarioEditar = usuarios.find((usuario) => usuario.id === userId);
-    setEditarUsuario(usuarioEditar); Introduzco el usuario en setEditarUsuario
-  };
-
-  Funcion actualizar usuario que modificara el usuario solicitadoS
-  const actualizarUsuario = (data) => {
-    Al presiona actualizar, realizará la peticion PATCH
-    modificar(PATH, data) 
-    .then(() => { Al terminar la peticion hago un map de usuarios de nuevo, comparando las ids, si coincide muestro la lista con los datos
-      usuarios.map((usuario) => usuario.id === data.userId ? { ...usuario, ...data } : usuario 
-  );
-      setEditarUsuario(null);
-    })
-      .catch((error) => {
-        //
-        console.error(error);
-      });
-      
-  };*/ 
-
-
   return (
 <Container fluid className="p-3 contenedorApi" style={{ maxWidth: "800px" }}>
       <Card>
@@ -123,7 +98,7 @@ const ApiCrud = () => {
                 }}
               />
             </Form.Group>
-            <Button variant="primary" style={{ width: "120px" }} onClick={introducirUsuario}>
+            <Button className="agregarPost" variant="primary" style={{ width: "120px" }} onClick={introducirUsuario}>
               {editarPost ? 'Guardar Cambios' : 'Agregar Post'}
             </Button>
           </Form>
@@ -138,23 +113,29 @@ const ApiCrud = () => {
             <Card.Body>
               <h5>Titulo: {post.title}</h5>
               <p>Cuerpo: {post.text}</p>
+              <div className="botones">
               <Button
                 variant="danger"
                 style={{ width: "120px" }}
                 className="mr-2"
                 onClick={() => borrarPost(post.id)}
               >
-                Borrar Post
+                Borrar 
               </Button>
               <Button
                 variant="warning"
-                style={{ width: "120px", height: "60px" }}
+                style={{ width: "120px"}}
                 className="mr-2"
                 onClick={() => setEditarPost({ id: post.id, title: post.title, text: post.text })}
               >
-                modificar Post
+                modificar 
               </Button>
+              </div>
+
+              <div>
               <Comments postId={post.id} userId={nuevoPost.user_id} pathPost={PATH} />
+
+              </div>
             </Card.Body>
           </Card>
         ))}

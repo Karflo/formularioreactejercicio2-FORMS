@@ -64,7 +64,7 @@ export function modificar(path, data){ //Funcion modificar que modificara el usu
     })
 }
 
-export function getComentario(path, id){
+export function getComentario(path, id){ //Funcion que atrae los comentarios
      return fetch(BASE_URL + path + + id ,{
         method: 'GET',
         headers: {
@@ -76,7 +76,7 @@ export function getComentario(path, id){
 
 }
 
-export function crearComentario(path, data){
+export function crearComentario(path, data){ //Funcion que crea los comentarios
     return fetch(BASE_URL + path,{
         method: 'POST',
         headers: {
@@ -93,7 +93,7 @@ export function crearComentario(path, data){
           })
 }
 
-export function borrarComentario(path, id){
+export function borrarComentario(path, id){ //Funcion que borra los comentarios
     return fetch(BASE_URL + path +  id,{
         method: 'DELETE',
         headers: {
@@ -105,6 +105,16 @@ export function borrarComentario(path, id){
 
 }
 
-export function editarComentario(){
-
+export function editarComentario(path, data){ //Funcion que editará el comentario
+    return fetch(BASE_URL + path +  data.id, { //Tomo la data del comentario que traigo
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),  //Realizo el metodo PATCH mandando el body mediante json y actuaulizo
+      })
+      .then((response) => {
+        response.json()
+    })
 }

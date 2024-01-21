@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {getComentario, crearComentario, borrarComentario} from "../../api/requests/requests";
+import {getComentario, crearComentario, borrarComentario, editarComentario} from "../../api/requests/requests";
 import {Form, Button, Card } from "react-bootstrap";
-
+import './Comment.css';
+import Likes from "./Likes";
 
 function Comments(props) {
 
-    const [comments, setComment] = useState([]);
+    const [comentarios, setComentarios] = useState([]);
     const [newComment, setNewComment] = useState("");
+    const [comentarioEditado, setEditarComentario] = useState(null);
 
     const PATH = props.pathPost + "/comment/";
 
@@ -14,8 +16,8 @@ function Comments(props) {
   
     useEffect(() => {
         getComentario(PATH, props.postId) // Asumiendo que la función getPost espera solo dos argumentos
-          .then((comments) => {
-            setComment(comments);
+          .then((comentarios) => {
+            setComentarios(comentarios);
           })
           .catch(console.log);
       }, []); // Agrega props.pathPost y props.postId como dependencias del useEffect
@@ -29,40 +31,84 @@ function Comments(props) {
           };
         crearComentario(PATH, data)
         .then(() => {
-          const nuevosComentarios = [...comments]
+          const nuevosComentarios = [...comentarios]
           nuevosComentarios.push(newComment)
-          setComment(nuevosComentarios)
+          setComentarios(nuevosComentarios)
         })
         .catch((error )=> {
             console.log(error)
         })
       }
 
-      const quitarComentario = (commentId) =>{
+      const quitarComentario = (commentId) => {
         borrarComentario(PATH, commentId)
-        .catch((error) => {
-        console.log(error);
-    })};
-  
-
-
+          .then(() => {
+            // Filtrar los comentarios para quitar el comentario con commentId
+            const comentariosActualizados = comentarios.filter(comentarios => comentarios.id !== commentId);
+            setComentarios(comentariosActualizados);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      };
+      
+      //Metodo que previene el evento por defecto de submit
+      const manejarComment = (e) => {
+        e.preventDefault();
+    
+        if (comentarioEditado) {
+          // Si hay un comentario editado, guardamos los cambios
+          const updatedComment = { ...comentarioEditado, text: newComment };
+    
+          editarComentario(PATH, updatedComment)
+            .then(() => {
+              const comentariosActualizados = comentarios.map(comment =>
+                comment.id === updatedComment.id ? updatedComment : comment
+              );
+      
+              setComentarios(comentariosActualizados);
+              setEditarComentario(null);
+              setNewComment("");
+            })
+            .catch((error) => {
+              console.log('Error al editar comentario:', error);
+            });
+        } else {
+          // Si no hay un comentario en edición, agregamos un nuevo comentario
+          postComentario();
+        }
+      };
+    
 
     return (
-        <>
-     <h4>Comentarios</h4>
-      {comments.length > 0 ? (
-        comments.map((comment, index) => (
+      <>
+      <h4>Comentarios</h4>
+      {comentarios.length > 0 ? (
+        comentarios.map((comentarios, index) => (
           <Card key={index} className="mt-3">
             <Card.Body>
-              <p>{comment.text}</p>
+              <p>{comentarios.text}</p>
+              <p><Likes /></p>
+              
               <Button
                 variant="danger"
                 size="sm"
                 style={{ width: "80px" }}
                 className="mr-2"
-                onClick={() => quitarComentario(comment.id)}
+                onClick={() => quitarComentario(comentarios.id)}
               >
                 Eliminar
+              </Button>
+              <Button
+                variant="warning"
+                size="sm"
+                style={{ width: "80px" }}
+                onClick={() => {
+                  setEditarComentario(comentarios);
+                  setNewComment(comentarios.text);
+                }}
+              >
+                Editar
               </Button>
             </Card.Body>
           </Card>
@@ -70,9 +116,9 @@ function Comments(props) {
       ) : (
         <p>No hay comentarios.</p>
       )}
-      <Form>
+      <Form onSubmit={manejarComment}>
         <Form.Group controlId="formComment">
-          <Form.Label>Nuevo Comentario</Form.Label>
+          <Form.Label className="nuevoComment">{comentarioEditado ? 'Editar comentario' : 'Nuevo comentario'}</Form.Label>
           <Form.Control
             type="text"
             placeholder="Escribe tu comentario aquí"
@@ -80,11 +126,30 @@ function Comments(props) {
             onChange={(e) => setNewComment(e.target.value)}
           />
         </Form.Group>
-        <Button variant="primary" size="sm" style={{ width: "120px" }} onClick={postComentario}>
-          Agregar Comentario
+        <Button
+        className="botonAgregar"
+          type="submit"
+          variant={comentarioEditado ? 'warning' : 'primary'}
+          size="sm"
+          style={{ width: "120px" }}
+        >
+          {comentarioEditado ? 'Guardar Cambios' : 'Agregar Comentario'}
         </Button>
+        {comentarioEditado && (
+          <Button
+            variant="secondary"
+            size="sm"
+            style={{ width: "90px", marginLeft: "10px" }}
+            onClick={() => {
+              setEditarComentario(null);
+              setNewComment("");
+            }}
+          >
+            Cancelar
+          </Button>
+        )}
       </Form>
-      </>
+    </>
   
     );
         

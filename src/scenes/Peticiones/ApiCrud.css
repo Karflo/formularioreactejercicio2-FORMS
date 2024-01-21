@@ -4,3 +4,16 @@
   width: 100% !important;
   text-align: center;
 }
+
+.botones{
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.botones button{
+padding: 3px;
+}
+
+.agregarPost{
+  margin-top: 3%;
+}
