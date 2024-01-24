@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./ApiCrud.css";
-import { Container, Form, Button, Card, Row, Col } from "react-bootstrap";
+import { Container, Form, Button, Card } from "react-bootstrap";
 import { get, post, borrar, modificar, borrarComentariospost } from "../../api/requests/requests";
 import Comments from "./Comments";
 
@@ -10,11 +10,10 @@ const ApiCrud = () => {
   const [nuevoPost, setNuevoPost] = useState({
     title: "",
     text: "",
-    user_id: 239,
+    user_id: 57,
 
   });
 
-//  const PATH = "/users";
   const PATH = "/posts";
   const PATHCOMMENT = "/posts/comment/";
 
@@ -24,7 +23,7 @@ const ApiCrud = () => {
         setPost(posts);
       })
       .catch(console.log);
-  }, []);
+  }, [posts]);
 
   const borrarPost = (postId) => {
     borrarComentariospost(PATHCOMMENT,postId)
@@ -44,7 +43,7 @@ const ApiCrud = () => {
     if (editarPost) {
       modificar(PATH, editarPost)
         .then(() => {
-          setNuevoPost({ title: '', text: '' , id: ''});
+          setNuevoPost({ title: '', text: '' , id: editarPost.id});
           setEditarPost(null);
           // Realizar la lógica de recarga de datos o actualización de la lista de posts
         })
@@ -88,7 +87,7 @@ const ApiCrud = () => {
               <Form.Label>Text</Form.Label>
               <Form.Control
                 type="text"
-                value={editarPost ? editarPost.text : nuevoPost.text}
+                value={editarPost ? editarPost.TEXT : nuevoPost.TEXT}
                 onChange={(e) => {
                   if (editarPost) {
                     setEditarPost({ ...editarPost, text: e.target.value });
@@ -112,7 +111,8 @@ const ApiCrud = () => {
           <Card key={index} className="mt-3">
             <Card.Body>
               <h5>Titulo: {post.title}</h5>
-              <p>Cuerpo: {post.text}</p>
+              <h5>ID: {post.id}</h5>
+              <p>Cuerpo: {post.text} {post.TEXT}</p>
               <div className="botones">
               <Button
                 variant="danger"
@@ -126,7 +126,7 @@ const ApiCrud = () => {
                 variant="warning"
                 style={{ width: "120px"}}
                 className="mr-2"
-                onClick={() => setEditarPost({ id: post.id, title: post.title, text: post.text })}
+                onClick={() => setEditarPost({ id: post.id, title: post.title, text: post.TEXT })}
               >
                 modificar 
               </Button>

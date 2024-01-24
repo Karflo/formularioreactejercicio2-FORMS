@@ -12,15 +12,19 @@ function Comments(props) {
 
     const PATH = props.pathPost + "/comment/";
 
-    const userId = props.userId;
   
     useEffect(() => {
+      if(props.postId === undefined){
+
+      }else{
         getComentario(PATH, props.postId) // Asumiendo que la función getPost espera solo dos argumentos
           .then((comentarios) => {
             setComentarios(comentarios);
           })
           .catch(console.log);
-      }, []); // Agrega props.pathPost y props.postId como dependencias del useEffect
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [comentarios]); //Paso los comentarios
       
 
       const postComentario = () => {
@@ -55,7 +59,7 @@ function Comments(props) {
       //Metodo que previene el evento por defecto de submit
       const manejarComment = (e) => {
         e.preventDefault();
-    
+     //Si el comentario es Editado mostrará lo primero
         if (comentarioEditado) {
           // Si hay un comentario editado, guardamos los cambios
           const updatedComment = { ...comentarioEditado, text: newComment };
@@ -65,7 +69,6 @@ function Comments(props) {
               const comentariosActualizados = comentarios.map(comment =>
                 comment.id === updatedComment.id ? updatedComment : comment
               );
-      
               setComentarios(comentariosActualizados);
               setEditarComentario(null);
               setNewComment("");
@@ -74,12 +77,14 @@ function Comments(props) {
               console.log('Error al editar comentario:', error);
             });
         } else {
-          // Si no hay un comentario en edición, agregamos un nuevo comentario
+          // Si no hay un comentario en edición, es decir, no contiene datos, agregamos un nuevo comentario
           postComentario();
         }
       };
     
-
+//En este return si la longitud de comentarios es mayor a cero mostrará un apartado para agregar los comentarios
+//En el caso de que no mostrar aquen o hay comentarios
+//Por otro lado agregará un booleano de que si hay un comentario editandose cambiará el boton y su
     return (
       <>
       <h4>Comentarios</h4>
@@ -87,7 +92,7 @@ function Comments(props) {
         comentarios.map((comentarios, index) => (
           <Card key={index} className="mt-3">
             <Card.Body>
-              <p>{comentarios.text}</p>
+              <p>{comentarios.TEXT}</p>
               <p><Likes /></p>
               
               <Button
@@ -105,7 +110,7 @@ function Comments(props) {
                 style={{ width: "80px" }}
                 onClick={() => {
                   setEditarComentario(comentarios);
-                  setNewComment(comentarios.text);
+                  setNewComment(comentarios.TEXT);
                 }}
               >
                 Editar
@@ -150,7 +155,7 @@ function Comments(props) {
         )}
       </Form>
     </>
-  
+   //Si hay comentarioEditado (es decir que se edita ) mostrará el boton de cancelar
     );
         
 }

@@ -1,7 +1,7 @@
 const BASE_URL = 'http://127.0.0.1:5000';
 
 export function get(path){ //Función que permite traer a todos los usuarios desde PyCharm 
-    return fetch(BASE_URL + path,{
+    return fetch(BASE_URL +  path,{
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -65,12 +65,13 @@ export function modificar(path, data){ //Funcion modificar que modificara el usu
 }
 
 export function getComentario(path, id){ //Funcion que atrae los comentarios
-     return fetch(BASE_URL + path + + id ,{
+    console.log(id)
+     return fetch(BASE_URL + path + id ,{
         method: 'GET',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-        }
+        },
     })
     .then((response) => response.json())
 
