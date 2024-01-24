@@ -3,14 +3,15 @@ import "./ApiCrud.css";
 import { Container, Form, Button, Card } from "react-bootstrap";
 import { get, post, borrar, modificar, borrarComentariospost } from "../../api/requests/requests";
 import Comments from "./Comments";
-
+  
 const ApiCrud = () => {
+  const userID = 57;
   const [posts, setPost] = useState(null);
   const [editarPost, setEditarPost] = useState(null);
   const [nuevoPost, setNuevoPost] = useState({
     title: "",
     text: "",
-    user_id: 57,
+    user_id: userID,
 
   });
 
@@ -23,7 +24,7 @@ const ApiCrud = () => {
         setPost(posts);
       })
       .catch(console.log);
-  }, [posts]);
+  }, []);
 
   const borrarPost = (postId) => { //Borramos el post a traves de la id del Post
     borrarComentariospost(PATHCOMMENT,postId)
@@ -41,13 +42,13 @@ const ApiCrud = () => {
     if (editarPost) {
       modificar(PATH, editarPost)
       .then(() => {
-        // Actualizar la lista de posts después de editar
-        return get(PATH);
+        return get(PATH);         // Actualizar la lista de posts después de editar
+
       })
       .then((postArray) => { //Tomo el array proviente del get para poder introducirlo en post
         setPost(postArray);
-        setNuevoPost({ title: '', text: '', user_id: 57 }); //Se establece el nuevopost en vacio
-        setEditarPost(null); //Se pone en nulo para poder salir del modo edit de nuestros botones
+        setNuevoPost({ title: '', text: '', user_id: userID }); //Se establece el nuevopost en vacio
+        setEditarPost(null); //Se pone en nulo para poder salir del modo edit de nuestros botonee
       })
         .catch((error) => console.error('Error al editar el post:', error));
     } else{
@@ -89,7 +90,7 @@ const ApiCrud = () => {
               <Form.Label>Text</Form.Label>
               <Form.Control
                 type="text"
-                value={editarPost ? editarPost.text : nuevoPost.text}
+                value={editarPost ? editarPost.TEXT : nuevoPost.TEXT}
                 onChange={(e) => {
                   if (editarPost) {
                     setEditarPost({ ...editarPost, text: e.target.value });

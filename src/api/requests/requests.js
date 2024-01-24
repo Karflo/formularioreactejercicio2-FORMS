@@ -1,6 +1,8 @@
 const BASE_URL = 'http://127.0.0.1:5000';
 
-export function get(path){ //Función que permite traer a todos los usuarios desde PyCharm 
+export function get(path){ //Función que permite traer a todos los usuarios desde PyCharm
+    console.log("pasa por aqui getPost")
+ 
     return fetch(BASE_URL +  path,{
         method: 'GET',
         headers: {
@@ -14,6 +16,8 @@ export function get(path){ //Función que permite traer a todos los usuarios des
 
 
 export function post(path,data){ //Funcion que permite postear el nuevo usuario
+    console.log("pasa por aqui crearPost")
+
     return fetch(BASE_URL + path,{
         method: 'POST',
         headers: {
@@ -28,6 +32,8 @@ export function post(path,data){ //Funcion que permite postear el nuevo usuario
 }
 
 export function borrarComentariospost(path,id){
+    console.log("pasa por aqui borrarComentsPost")
+
     return fetch(BASE_URL + path + id,{
         method: 'DELETE',
         headers: {
@@ -39,6 +45,8 @@ export function borrarComentariospost(path,id){
 }
 
 export function borrar(path, id){
+    console.log("pasa por aqui borrarPOst")
+
     return fetch(BASE_URL + path + "/" + id,{
         method: 'DELETE',
         headers: {
@@ -51,6 +59,8 @@ export function borrar(path, id){
 }
 
 export function modificar(path, data){ //Funcion modificar que modificara el usuario en cuestion
+    console.log("pasa por aqui modificarPost")
+
     return fetch(BASE_URL + path + "/" + data.id, { //Tomo la data del usuario que traigo
         method: 'PATCH',
         headers: {
@@ -65,6 +75,7 @@ export function modificar(path, data){ //Funcion modificar que modificara el usu
 }
 
 export function getComentario(path, id){ //Funcion que atrae los comentarios
+    console.log("pasa por aqui tomarComentario")
      return fetch(BASE_URL + path + id ,{
         method: 'GET',
         headers: {
@@ -78,6 +89,8 @@ export function getComentario(path, id){ //Funcion que atrae los comentarios
 }
 
 export function crearComentario(path, data){ //Funcion que crea los comentarios
+    console.log("pasa por aqui crearComentario")
+
     return fetch(BASE_URL + path,{
         method: 'POST',
         headers: {
@@ -90,6 +103,8 @@ export function crearComentario(path, data){ //Funcion que crea los comentarios
 }
 
 export function borrarComentario(path, id){ //Funcion que borra los comentarios
+    console.log("pasa por aqui borrarComentario")
+
     return fetch(BASE_URL + path +  id,{
         method: 'DELETE',
         headers: {
@@ -102,6 +117,8 @@ export function borrarComentario(path, id){ //Funcion que borra los comentarios
 }
 
 export function editarComentario(path, data){ //Funcion que editará el comentario
+    console.log("pasa por aqui editarComentario")
+
     return fetch(BASE_URL + path +  data.id, { //Tomo la data del comentario que traigo
         method: 'PATCH',
         headers: {
