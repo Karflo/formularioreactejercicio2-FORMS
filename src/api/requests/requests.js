@@ -65,7 +65,6 @@ export function modificar(path, data){ //Funcion modificar que modificara el usu
 }
 
 export function getComentario(path, id){ //Funcion que atrae los comentarios
-    console.log(id)
      return fetch(BASE_URL + path + id ,{
         method: 'GET',
         headers: {
@@ -73,7 +72,8 @@ export function getComentario(path, id){ //Funcion que atrae los comentarios
             'Content-Type': 'application/json',
         },
     })
-    .then((response) => response.json())
+    .then((response) => response.json()       
+    )
 
 }
 
@@ -86,12 +86,7 @@ export function crearComentario(path, data){ //Funcion que crea los comentarios
         },
         'body':  JSON.stringify(data), 
         })
-        .then((response) => {
-            if (!response.ok) {
-              console.log(`Error en la solicitud: ${response.statusText}`);
-            }
-            return response.json();
-          })
+        .then((response) => response.json())
 }
 
 export function borrarComentario(path, id){ //Funcion que borra los comentarios

@@ -11,21 +11,22 @@ function Comments(props) {
     const [comentarioEditado, setEditarComentario] = useState(null);
 
     const PATH = props.pathPost + "/comment/";
-
-  
+    
     useEffect(() => {
-      if(props.postId === undefined){
-
-      }else{
-        getComentario(PATH, props.postId) // Asumiendo que la función getPost espera solo dos argumentos
-          .then((comentarios) => {
-            setComentarios(comentarios);
-          })
-          .catch(console.log);
+      if (props.postId === undefined) {
+        // En el caso de no recibir la id del post no realiza la peticon
+        return;
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [comentarios]); //Paso los comentarios
-      
+  
+      getComentario(PATH, props.postId)
+        .then((comentariosData) => {
+          setComentarios(comentariosData); //Una vez finalizado el get, lo introduzco en set la data para actualizar
+        })
+        .catch(console.log);
+  
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [comentarios]); // Agrega comentarios como dependencia
+  
 
       const postComentario = () => {
         const data = {
@@ -62,15 +63,15 @@ function Comments(props) {
      //Si el comentario es Editado mostrará lo primero
         if (comentarioEditado) {
           // Si hay un comentario editado, guardamos los cambios
-          const updatedComment = { ...comentarioEditado, text: newComment };
+          const updatedCommentario = { ...comentarioEditado, text: newComment };
     
-          editarComentario(PATH, updatedComment)
+          editarComentario(PATH, updatedCommentario)
             .then(() => {
               const comentariosActualizados = comentarios.map(comment =>
-                comment.id === updatedComment.id ? updatedComment : comment
+                comment.id === updatedCommentario.id ? updatedCommentario : comment
               );
               setComentarios(comentariosActualizados);
-              setEditarComentario(null);
+              setEditarComentario(null); //Seteo a nulo para poder volver al boton
               setNewComment("");
             })
             .catch((error) => {
@@ -89,10 +90,10 @@ function Comments(props) {
       <>
       <h4>Comentarios</h4>
       {comentarios.length > 0 ? (
-        comentarios.map((comentarios, index) => (
+        comentarios.map((comentario, index) => (
           <Card key={index} className="mt-3">
             <Card.Body>
-              <p>{comentarios.TEXT}</p>
+              <p>{comentario.TEXT}</p>
               <p><Likes /></p>
               
               <Button
@@ -100,7 +101,7 @@ function Comments(props) {
                 size="sm"
                 style={{ width: "80px" }}
                 className="mr-2"
-                onClick={() => quitarComentario(comentarios.id)}
+                onClick={() => quitarComentario(comentario.id)}
               >
                 Eliminar
               </Button>
@@ -109,8 +110,8 @@ function Comments(props) {
                 size="sm"
                 style={{ width: "80px" }}
                 onClick={() => {
-                  setEditarComentario(comentarios);
-                  setNewComment(comentarios.TEXT);
+                  setEditarComentario(comentario);
+                  setNewComment(comentario.TEXT);
                 }}
               >
                 Editar

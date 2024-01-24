@@ -25,14 +25,12 @@ const ApiCrud = () => {
       .catch(console.log);
   }, [posts]);
 
-  const borrarPost = (postId) => {
+  const borrarPost = (postId) => { //Borramos el post a traves de la id del Post
     borrarComentariospost(PATHCOMMENT,postId)
     borrar(PATH, postId)
     get(PATH)
     .then((postArray) => {
-      // Now you can use postArray as an array
-      const postActualizados = postArray.filter((post) => post.id !== postId);
-      setPost(postActualizados);
+      setPost(postArray);
     })
     .catch((error) => {
       console.log(error);
@@ -42,11 +40,15 @@ const ApiCrud = () => {
   const introducirUsuario = () => {
     if (editarPost) {
       modificar(PATH, editarPost)
-        .then(() => {
-          setNuevoPost({ title: '', text: '' , id: editarPost.id});
-          setEditarPost(null);
-          // Realizar la lógica de recarga de datos o actualización de la lista de posts
-        })
+      .then(() => {
+        // Actualizar la lista de posts después de editar
+        return get(PATH);
+      })
+      .then((postArray) => { //Tomo el array proviente del get para poder introducirlo en post
+        setPost(postArray);
+        setNuevoPost({ title: '', text: '', user_id: 57 }); //Se establece el nuevopost en vacio
+        setEditarPost(null); //Se pone en nulo para poder salir del modo edit de nuestros botones
+      })
         .catch((error) => console.error('Error al editar el post:', error));
     } else{
       post(PATH, nuevoPost)
@@ -87,7 +89,7 @@ const ApiCrud = () => {
               <Form.Label>Text</Form.Label>
               <Form.Control
                 type="text"
-                value={editarPost ? editarPost.TEXT : nuevoPost.TEXT}
+                value={editarPost ? editarPost.text : nuevoPost.text}
                 onChange={(e) => {
                   if (editarPost) {
                     setEditarPost({ ...editarPost, text: e.target.value });
