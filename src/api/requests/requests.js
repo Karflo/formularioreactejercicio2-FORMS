@@ -131,3 +131,17 @@ export function editarComentario(path, data){ //Funcion que editará el comentar
         response.json()
     })
 }
+
+
+export function postToken(path, data){
+    return fetch(BASE_URL +  path,{
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body:  JSON.stringify(data), 
+    
+    }) .then((response) => response.json())
+
+}

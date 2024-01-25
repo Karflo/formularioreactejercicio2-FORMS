@@ -5,7 +5,7 @@ import { Error404 } from "../errorpages/_404";
 import Peticiones from "../../../scenes/Peticiones/Peticiones";
 import Layout from './Layout';
 import React from "react";
-import Reacthook from "../../../scenes/ReactForm/Reacthook";
+import Reacthook from "../../../scenes/Login/Reacthook";
 export const rutas  = createBrowserRouter([ //En este lugar renderiza el padre "Layout" que tiene el header, el footer y el content
   {
     element: <Layout />, //Padre de mi aplicacion

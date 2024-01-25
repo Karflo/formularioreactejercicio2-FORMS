@@ -18,7 +18,7 @@ const ApiCrud = () => {
   const PATH = "/posts";
   const PATHCOMMENT = "/posts/comment/";
 
-  useEffect(() => {
+  useEffect(() => { //useEffect usado para poder renderizar el componente por primera vez
     get(PATH)
       .then((posts) => {
         setPost(posts);
@@ -26,25 +26,26 @@ const ApiCrud = () => {
       .catch(console.log);
   }, []);
 
+
+  const actualizarDatos = () => { //Actualizo los datos de los posts
+    get(PATH)
+      .then((posts) => {
+        setPost(posts);
+      })
+      .catch(console.log);
+  };
+
   const borrarPost = (postId) => { //Borramos el post a traves de la id del Post
     borrarComentariospost(PATHCOMMENT,postId)
-    borrar(PATH, postId)
-    get(PATH)
-    .then((postArray) => {
-      setPost(postArray);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    .then(() => borrar(PATH, postId))
+    .then(() => actualizarDatos());
+    
   };
 
   const introducirUsuario = () => {
     if (editarPost) {
       modificar(PATH, editarPost)
-      .then(() => {
-        return get(PATH);         // Actualizar la lista de posts después de editar
-
-      })
+      .then(() => actualizarDatos())
       .then((postArray) => { //Tomo el array proviente del get para poder introducirlo en post
         setPost(postArray);
         setNuevoPost({ title: '', text: '', user_id: userID }); //Se establece el nuevopost en vacio
@@ -53,6 +54,7 @@ const ApiCrud = () => {
         .catch((error) => console.error('Error al editar el post:', error));
     } else{
       post(PATH, nuevoPost)
+      .then(() => actualizarDatos())
       .then(() => {
         const newPost = [...posts] //Traigo el array desestructurado
         newPost.push(nuevoPost) //Pusheo el nuevo usuario al final

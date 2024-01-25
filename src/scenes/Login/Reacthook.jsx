@@ -1,25 +1,39 @@
 import { useForm } from 'react-hook-form';
 import {  Card, CardBody } from "react-bootstrap";
-import React, { useState } from "react";
 import './Reacthook.css';
+import React, { useState } from 'react';
+import { postToken } from '../../api/requests/requests';
+
 function Reacthook() {
-  const [nuevoUsuario, setNuevoUsuario] = useState({
-    username: "",
-    mail: "",
-    password: "",
-    forma: "",
-    fecha: "",
-  });
+
+  const [token, setToken] = useState(null); // Nuevo estado para almacenar el token
 
   //Usamos una constante donde guardamos todo lo que deseemo.
   //register implica la forma de registrar los campos del formulario
   //handleSubmit es una funcion que se utiiliza como el event.preventDefault de submit previniendo la carga de la pagina y ejecuta la logica
   //formStaete contiene las propuedas relacionadas con el formulario como por ejemplo los errores que son aquellos que queremos mostrar
   const { register, handleSubmit, formState: { errors } } = useForm(); 
+
+  const path = "/auth/login"
   
-const manejarSubmit = (data) => {
-  console.log('Formulario enviado: ' ,data);
-}
+
+
+  const manejarSubmit = async (data) => {
+    try {
+      // Llamada a la API para obtener el token
+      const response = await postToken(path, data);
+      
+      if (response.token) {
+        // Actualiza el estado del token si la llamada es exitosa
+        setToken(response.token);
+      } else {
+        // Manejar casos donde la autenticación falla
+        console.error("Inicio de sesión fallido");
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+    }
+  };
 
   return (
     <Card>
@@ -76,33 +90,7 @@ const manejarSubmit = (data) => {
 
       />
     </div>
-    <div>
-        <label htmlFor="forma">Saludo:</label>
-        <select
-          id="forma"
-          name="forma"
-          {...register("forma", {
-            required: 'Este campo es obligatorio'
-          })}
-        >
-          <option value="">Seleccionar</option>
-          <option value="Señor">Señor</option>
-          <option value="Señora">Señora</option>
-        </select>
-        {errors.forma && <p>{errors.forma.message}</p>}
-      </div>
-      <div>
-        <label htmlFor="fecha">Fecha de nacimiento:</label>
-        <input
-          type="date"
-          id="fecha"
-          name="fecha"
-          {...register("fecha", {
-            required: 'Este campo es obligatorio'
-          })}
-        />
-        {errors.fecha && <p>{errors.fecha.message}</p>}
-      </div>
+
       <button type="submit">Agregar</button>
     </form>
       </CardBody>

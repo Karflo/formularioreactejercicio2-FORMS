@@ -73,7 +73,7 @@ function Comments(props) {
       });
   }
 
-  const manejarComment = (e) => {
+  const manejarComment = (e) => { //Manejo el estado del submit
     e.preventDefault();
 
     if (comentarioEditado) {
