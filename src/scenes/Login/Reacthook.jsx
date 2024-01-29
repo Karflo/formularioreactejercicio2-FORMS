@@ -14,7 +14,7 @@ const Reacthook = () => {
   //formStaete contiene las propuedas relacionadas con el formulario como por ejemplo los errores que son aquellos que queremos mostrar
   const { handleSubmit, formState: { errors } } = useForm(); 
 
-  const {loading, error, user} = useSelector((state) => state.user);
+  const {loading, error} = useSelector((state) => state.user);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Reacthook = () => {
 
 
   const manejarSubmit =  (e) => {
-
+        
     let userCredential = {
       username, password
     }

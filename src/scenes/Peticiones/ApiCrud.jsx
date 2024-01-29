@@ -3,7 +3,10 @@ import "./ApiCrud.css";
 import { Container, Form, Button, Card } from "react-bootstrap";
 import { get, post, borrar, modificar, borrarComentariospost } from "../../api/requests/requests";
 import Comments from "./Comments";
-  
+import { checkStorage, logOut } from "../../redux/reducers/AuthSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
+
 const ApiCrud = () => {
   const userID = 57;
   const [posts, setPost] = useState(null);
@@ -17,15 +20,31 @@ const ApiCrud = () => {
 
   const PATH = "/posts";
   const PATHCOMMENT = "/posts/comment/";
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const isAuth = useSelector((state) => state.user.isAuthenticated)
+  const navigate = useNavigate();
 
+
+  const isTokenStored = () => {
+    return !!localStorage.getItem('user')
+  }
   useEffect(() => { //useEffect usado para poder renderizar el componente por primera vez
+
+      isTokenStored
+      ?
+      dispatch(checkStorage())
+      :
+      navigate('/reacthooks')
+    }, [dispatch, navigate]);
+
+  useEffect(() => {
     get(PATH)
       .then((posts) => {
         setPost(posts);
       })
       .catch(console.log);
-  }, []);
-
+  },[])
 
   const actualizarDatos = () => { //Actualizo los datos de los posts
     get(PATH)
@@ -66,7 +85,6 @@ const ApiCrud = () => {
   };
 }
 
-  
 
 
   return (
@@ -76,6 +94,7 @@ const ApiCrud = () => {
           <Form>
             <Form.Group controlId="formName">
               <Form.Label>Title:</Form.Label>
+              {user}
               <Form.Control
                 type="text"
                 value={editarPost ? editarPost.title : nuevoPost.title}
@@ -104,6 +123,9 @@ const ApiCrud = () => {
             </Form.Group>
             <Button className="agregarPost" variant="primary" style={{ width: "120px" }} onClick={introducirUsuario}>
               {editarPost ? 'Guardar Cambios' : 'Agregar Post'}
+            </Button>
+            <Button className="cerrarSesion" onClick={() => dispatch(logOut())} style={{ width: "120px", display:isAuth? "block" : "none" }} variant="primary">
+                  Cerrar sesión
             </Button>
           </Form>
         </Card.Body>
