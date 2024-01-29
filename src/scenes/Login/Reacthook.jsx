@@ -2,37 +2,37 @@ import { useForm } from 'react-hook-form';
 import {  Card, CardBody } from "react-bootstrap";
 import './Reacthook.css';
 import React, { useState } from 'react';
-import { postToken } from '../../api/requests/requests';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../../redux/reducers/AuthSlice';
+import { useNavigate } from 'react-router-dom';
 
-function Reacthook() {
-
-  const [token, setToken] = useState(null); // Nuevo estado para almacenar el token
+const Reacthook = () => {
 
   //Usamos una constante donde guardamos todo lo que deseemo.
   //register implica la forma de registrar los campos del formulario
   //handleSubmit es una funcion que se utiiliza como el event.preventDefault de submit previniendo la carga de la pagina y ejecuta la logica
   //formStaete contiene las propuedas relacionadas con el formulario como por ejemplo los errores que son aquellos que queremos mostrar
-  const { register, handleSubmit, formState: { errors } } = useForm(); 
+  const { handleSubmit, formState: { errors } } = useForm(); 
 
-  const path = "/auth/login"
-  
+  const {loading, error, user} = useSelector((state) => state.user);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
 
-  const manejarSubmit = async (data) => {
-    try {
-      // Llamada a la API para obtener el token
-      const response = await postToken(path, data);
-      
-      if (response.token) {
-        // Actualiza el estado del token si la llamada es exitosa
-        setToken(response.token);
-      } else {
-        // Manejar casos donde la autenticación falla
-        console.error("Inicio de sesión fallido");
-      }
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
+  const manejarSubmit =  (e) => {
+
+    let userCredential = {
+      username, password
     }
+    dispatch(loginUser(userCredential)).then((result) => {
+        if(result.payload){
+          setUsername('');
+          setPassword('');
+          navigate('/lista')
+        }
+    })
   };
 
   return (
@@ -45,31 +45,10 @@ function Reacthook() {
         type="text"
         id="username"
         name="username"
-        {...register("username", {required: 'Este campo es obligatorio', 
-        minLength:{
-          value: 3,
-          message: 'El usuario debe tener al menos tres caracteres'
-        }})}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
         {errors.username && <p>{errors.username.message}</p>}
-
-    </div>
-    <div>
-      <label for="mail">Correo:</label>
-      <input
-        type="text"
-        id="mail"
-        name="mail"
-        {...register("mail",
-         {required: 'El campo de email es obligatorio', 
-        minLength: 3,
-        pattern:{
-          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-          message: 'Ingresa un correo electrónico valido'
-        }})}
-
-      />    
-      {errors.mail && <p>{errors.mail.message}</p>}
 
     </div>
     <div>
@@ -78,20 +57,16 @@ function Reacthook() {
         type="text"
         id="password"
         name="password"
-        {...register("password", 
-        {required: 'Este campo es obligatorio',
-         minLength:{
-          value: 4,
-          message: 'La contraseña debe contener al menos 8 caracteres'
-         },
-        pattern: {
+        onChange={(e) => setPassword(e.target.value)}
 
-        }})}
 
       />
     </div>
 
-      <button type="submit">Agregar</button>
+      <button type="submit">Agregar{loading?'Loading...':'Login'}</button>
+      {error && (
+        <div>{error}</div>
+      )}
     </form>
       </CardBody>
     
