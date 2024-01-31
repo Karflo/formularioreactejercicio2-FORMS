@@ -1,3 +1,6 @@
+import axios from 'axios';
+
+
 const BASE_URL = 'http://127.0.0.1:5000';
 
 export function get(path){ //Función que permite traer a todos los usuarios desde PyCharm
@@ -133,15 +136,11 @@ export function editarComentario(path, data){ //Funcion que editará el comentar
 }
 
 
-export function postToken(path, data){
-    return fetch(BASE_URL +  path,{
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body:  JSON.stringify(data), 
-    
-    }) .then((response) => response.json())
-
-}
+export function postToken(path, data) {
+    return axios.post(`${BASE_URL}${path}`, data)
+      .then(response => response.data)
+      .catch(error => {
+        console.error('Error during POST request:', error);
+        throw error;  // You might want to handle errors differently
+      });
+  }

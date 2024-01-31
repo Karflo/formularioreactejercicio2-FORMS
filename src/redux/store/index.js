@@ -1,14 +1,29 @@
-import { configureStore } from "@reduxjs/toolkit";
-import userReducer from '../reducers/AuthSlice'
+import { createStore, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import persistReducer from 'redux-persist/es/persistReducer';
+import reducers from '../reducers';
+import storage from 'redux-persist/es/storage';
+import rootSaga from '../saga/index';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
+const sagaMiddleware = createSagaMiddleware();
 
+const storeConfigure = ({ initialState = {}, cache = false }) => {
+  const persistConfig = {
+    key: 'root',
+    storage: storage,
+  };
 
-//Configuro y creo el store usando la biblioteca pertinente.
-//Esto servirá para manejar el estado relacionado con el usuario
-const store = configureStore({
-  reducer: {
-    user: userReducer
-  }
-});
+  const persistedReducers = persistReducer(persistConfig, reducers);
 
-export default store;
+  const store = createStore(
+    persistedReducers,
+    initialState,
+    composeWithDevTools(applyMiddleware(sagaMiddleware))
+  );
+  sagaMiddleware.run(rootSaga);
+
+  return store;
+};
+
+export default storeConfigure;

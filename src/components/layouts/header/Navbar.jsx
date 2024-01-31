@@ -1,18 +1,48 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import {PATH_LIST, PATH_LOGIN, PATH_FORM, PATH_HOOK} from '../../../constants/Path'
-import './Navbar.css'
+import React, {useEffect } from "react";
+import { Link, useNavigate } from 'react-router-dom';
+import { PATH_LIST, PATH_LOGIN } from '../../../constants/Path';
+import './Navbar.css';
+import { connect } from 'react-redux';  
+import {authActionCheckStorage, authActionRequestLogout} from '../../../redux/actions/auth.action';
 
-function Header(){ //Creo el header de la aplicacion con un link to PATH_LIST hacia una ruta de mi Router.js
-    return(
-        <header >
-        
-       <Link to={PATH_LIST}>Ejercicio Formulario</Link> 
-       <Link to={PATH_FORM}>Formulario</Link> 
-       <Link to={PATH_LOGIN}>Login</Link> 
-       <Link to={PATH_HOOK}>React Hooks</Link> 
-        </header>
-    )
+function Header( props ) {
+    const navigate = useNavigate();
+
+    const isTokenStored = () => {
+        return !!localStorage.getItem('user')
+      }
+      useEffect(() => {
+        const tokenStored = isTokenStored();
+        if (!tokenStored) {
+          navigate('/reacthooks');
+        } else {
+            
+        }
+      }, [navigate]);
+
+    return (
+        <header className="cyberpunk-header">
+        <Link to={PATH_LIST} className="cyberpunk-link">Ejercicio Formulario</Link>
+        <Link to={PATH_LOGIN} className="cyberpunk-link">Login</Link>
+        <button className="cerrarSesion" onClick={
+          () =>
+           {
+            props.onLogoutUser();
+          navigate('/')
+          }
+          }
+            style={{ width: "120px", display: props.isAuthenticated ? "block" : "none" }}>CERRAR SESIÓN</button>
+    </header>
+    );
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.authState.isAuthenticated,
+  });
+
+  const mapDispatchToProps = (dispatch) => ({
+    onLoadCheckStorage: (isTokenStored) => dispatch(authActionCheckStorage(isTokenStored)),
+    onLogoutUser: () => dispatch(authActionRequestLogout()),
+  })
+  
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

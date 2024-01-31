@@ -1,10 +1,11 @@
 // App.jsx
-import React from 'react';
-import './App.css';
-import {  RouterProvider } from 'react-router-dom';
-import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import React from "react";
+import "./App.css";
+import { RouterProvider } from "react-router-dom";
+import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { rutas } from './components/layouts/main/Router';
+import { rutas } from "./components/layouts/main/Router";
+import { connect } from "react-redux";
 
 //Este index lo que realiza es una serie de rutas, en el caso de / me manda a Barranavegacion mas bien renderiza, en el caso de /registro que se combina con la barra de navegacion
 //Me mandará al Formulario renderizado que se combina con el /registro
@@ -24,9 +25,10 @@ function App() {
         </Routes>
       </Router>*/}
 
-      {/**/ }<RouterProvider router={rutas} />
+      {/**/}
+      <RouterProvider router={rutas} />
     </div>
   );
 }
 
-export default App;
+export default connect()(App);

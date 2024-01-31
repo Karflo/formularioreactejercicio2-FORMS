@@ -1,11 +1,12 @@
 import {  createBrowserRouter } from "react-router-dom";
 
-import { EVERYTHING_PATH,PATH_LIST,PATH_HOOK } from "../../../constants/Path";
+import { EVERYTHING_PATH,PATH_LIST, PATH_LOGIN, PATH_HOME } from "../../../constants/Path";
 import { Error404 } from "../errorpages/_404";
 import Peticiones from "../../../scenes/Peticiones/Peticiones";
 import Layout from './Layout';
 import React from "react";
-import Reacthook from "../../../scenes/Login/Reacthook";
+import Login from "../../../scenes/Login/Login";
+import Home from "../../../scenes/Home/Home";
 export const rutas  = createBrowserRouter([ //En este lugar renderiza el padre "Layout" que tiene el header, el footer y el content
   {
     element: <Layout />, //Padre de mi aplicacion
@@ -19,8 +20,12 @@ export const rutas  = createBrowserRouter([ //En este lugar renderiza el padre "
         element: <Peticiones /> 
       },
       {
-        path:PATH_HOOK,
-        element: <Reacthook /> 
+        path:PATH_LOGIN,
+        element: <Login /> 
+      },
+      {
+        path:PATH_HOME,
+        element: <Home /> 
       },
     ]
   },
