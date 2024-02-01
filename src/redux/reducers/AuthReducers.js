@@ -36,11 +36,14 @@ const ApplyGetAuthFailed = (state, action) => {
     user: null,
     isAuthenticated: false,
     error:
-      action.error.message === "Request failed with status code 401"
-        ? "Access Denied! Invalid Credentials"
-        : action.error.message
+      action.error && action.error.message
+        ? action.error.message === "Request failed with status code 401"
+          ? "Access Denied! Invalid Credentials"
+          : action.error.message
+        : "Credenciales invalidados",
   };
-}
+};
+
 
 const ApplyCheckStorage = (state, action) => {
   return {

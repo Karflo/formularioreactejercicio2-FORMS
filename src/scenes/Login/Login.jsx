@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';  
 import {authActionRequestFailed, authActionRequestStarted, authActionRequestSuccess} from '../../redux/actions/auth.action';
+import { FaUser,FaLock  } from 'react-icons/fa';
+import { MdHome } from "react-icons/md";
 
 
 const Login = ( props ) => {
-
   //Usamos una constante donde guardamos todo lo que deseemo.
   //register implica la forma de registrar los campos del formulario
   //handleSubmit es una funcion que se utiiliza como el event.preventDefault de submit previniendo la carga de la pagina y ejecuta la logica
@@ -15,6 +16,7 @@ const Login = ( props ) => {
       username: '',
       password: ''
   } );
+
   const navigate = useNavigate();
 
   const handleChangeUsername = (username) => {
@@ -22,7 +24,6 @@ const Login = ( props ) => {
       _userCredentials.username = username;
       setUsercredentials(_userCredentials);
   }
-
   const handleChangePassword = (password) => {
     const _userCredentials = {...userCredentials};
     _userCredentials.password = password;
@@ -30,45 +31,54 @@ const Login = ( props ) => {
 }
 
   const handleSubmit =  (e) => {
+    e.preventDefault();
       props.onLoadAuthStarted(userCredentials)
-        navigate('/')
 
   };
 
   return (
     
-    <div className='tarjeta'>
 
-        <form id="myForm" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="username">Usuario:</label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                onChange={(e) => handleChangeUsername(e.target.value)}
-              />
-                {props.error?.username && <p>{props.error?.username.message}</p>}
+    <form id="myForm" className="cyberpunk-form" onSubmit={handleSubmit}>
+      <MdHome size={100}  color='#0F0'/>
 
-            </div>
-            <div>
-              <label htmlFor="password">Contraseña:</label>
-              <input
-                type="text"
-                id="password"
-                name="password"
-                onChange={(e) => handleChangePassword(e.target.value)}
-
-
-              />
-            </div>
-
-              <button type="submit">{props.loading?'Cargando...':'Iniciar sesión'}</button>
-              {props.error && (
-                <div>{props.error}</div>
-              )}
-            </form>
+    <div className="cyberpunk-input-group">
+      <label htmlFor="username" className="cyberpunk-label">
+        <FaUser className="cyberpunk-icon" />
+        Usuario:
+      </label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        className="cyberpunk-input"
+        onChange={(e) => handleChangeUsername(e.target.value)}
+      />
+      {props.error?.username && <p className="cyberpunk-error-message">{props.error?.username.message}</p>}
     </div>
+    <div className="cyberpunk-input-group">
+      <label htmlFor="password" className="cyberpunk-label"> 
+        <FaLock className="cyberpunk-icon"/>
+        Contraseña:
+        </label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        className="cyberpunk-input"
+        onChange={(e) => handleChangePassword(e.target.value)}
+      />
+    </div>
+
+    <button type="submit" className="cyberpunk-button">
+      {props.loading ? 'Cargando...' : 'Iniciar sesión'}
+    </button>
+
+    {props.error && (
+      <div className="cyberpunk-error">{props.error}</div>
+    )}
+  </form>
+
     
   
   );

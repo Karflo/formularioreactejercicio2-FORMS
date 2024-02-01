@@ -14,24 +14,28 @@ function Header( props ) {
       useEffect(() => {
         const tokenStored = isTokenStored();
         if (!tokenStored) {
-          navigate('/reacthooks');
+          navigate('/');
         } else {
             
         }
       }, [navigate]);
 
     return (
-        <header className="cyberpunk-header">
-        <Link to={PATH_LIST} className="cyberpunk-link">Ejercicio Formulario</Link>
+      <header className="cyberpunk-header">
+      <Link to={PATH_LIST} className="cyberpunk-link">Ejercicio Formulario</Link>
+      <div className="cyberpunk-links-container">
         <Link to={PATH_LOGIN} className="cyberpunk-link">Login</Link>
-        <button className="cerrarSesion" onClick={
-          () =>
-           {
+        <button
+          className="cerrarSesion"
+          onClick={() => {
             props.onLogoutUser();
-          navigate('/')
-          }
-          }
-            style={{ width: "120px", display: props.isAuthenticated ? "block" : "none" }}>CERRAR SESIÓN</button>
+            navigate('/');
+          }}
+          style={{ display: props.isAuthenticated ? "block" : "none" }}
+        >
+          Logout
+        </button>
+      </div>
     </header>
     );
 }

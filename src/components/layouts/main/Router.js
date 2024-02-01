@@ -2,7 +2,7 @@ import {  createBrowserRouter } from "react-router-dom";
 
 import { EVERYTHING_PATH,PATH_LIST, PATH_LOGIN, PATH_HOME } from "../../../constants/Path";
 import { Error404 } from "../errorpages/_404";
-import Peticiones from "../../../scenes/Peticiones/Peticiones";
+import Peticiones from "../../../scenes/Foro/Peticiones";
 import Layout from './Layout';
 import React from "react";
 import Login from "../../../scenes/Login/Login";

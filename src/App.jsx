@@ -1,5 +1,5 @@
 // App.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { RouterProvider } from "react-router-dom";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
@@ -10,7 +10,9 @@ import { connect } from "react-redux";
 //Este index lo que realiza es una serie de rutas, en el caso de / me manda a Barranavegacion mas bien renderiza, en el caso de /registro que se combina con la barra de navegacion
 //Me mandará al Formulario renderizado que se combina con el /registro
 //La primera ruta me va a redigidir a Barranavegacion por eso no aparece nada
-function App() {
+function App( props ) {
+
+
   return (
     <div>
       {/*<Router>
@@ -30,5 +32,8 @@ function App() {
     </div>
   );
 }
+
+
+
 
 export default connect()(App);

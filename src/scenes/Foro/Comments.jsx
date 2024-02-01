@@ -9,14 +9,14 @@ function Comments(props) {
   const [newComment, setNewComment] = useState("");
   const [comentarioEditado, setEditarComentario] = useState(null);
 
-  const PATH = props.pathPost + "/comment/";
-
+  const PATH = props.pathPost + "/comments/";
+  const PATHEDIT = props.pathPost + "/comments"
   useEffect(() => {
     if (props.postId === undefined) { //Si la id que me pasan es indefinida, saldra del useEffect y no hara sus funciones
       return;
     }
 
-    getComentario(PATH, props.postId)
+    getComentario(props.postId)
       .then((comentariosData) => {
         setComentarios(comentariosData);
       })
@@ -30,9 +30,9 @@ function Comments(props) {
       user_id: props.userId,
       post_id: props.postId,
     };
-    crearComentario(PATH, data)
+    crearComentario(data)
       .then(() => {
-      return getComentario(PATH, props.postId); //Traigo los comentarios de nuevo para actualizarlo
+      return getComentario(props.postId); //Traigo los comentarios de nuevo para actualizarlo
       })
       .then((comentariosData) => {
         setComentarios(comentariosData);
@@ -46,7 +46,7 @@ function Comments(props) {
   const quitarComentario = (commentId) => {
     borrarComentario(PATH, commentId)
       .then(() => {
-        return getComentario(PATH, props.postId); //Traigo los comentarios de nuevo una vez borrados
+        return getComentario(props.postId); //Traigo los comentarios de nuevo una vez borrados
       })
       .then((comentariosData) => {
         setComentarios(comentariosData);
@@ -59,9 +59,9 @@ function Comments(props) {
   const modificarComentarios = () => {
     const updatedCommentario = { ...comentarioEditado, text: newComment }; //Le mando el comentario editado con el nuevo texto
 
-    editarComentario(PATH, updatedCommentario)
+    editarComentario(PATHEDIT, updatedCommentario)
       .then(() => {
-        return getComentario(PATH, props.postId); //Traigo de nuevo los comentarios editados
+        return getComentario(props.postId); //Traigo de nuevo los comentarios editados
       })
       .then((comentariosData) => {
         setComentarios(comentariosData);

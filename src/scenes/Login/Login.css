@@ -1,4 +1,56 @@
-.tarjeta{
-  width: 30%;
-  height: 30%;
+.cyberpunk-form {
+  background-color: #1a1a1a;
+  border: 2px solid #4d4d4d;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  margin: auto;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cyberpunk-input-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cyberpunk-label {
+  margin-bottom: 5px;
+  color: #0F0;
+  text-align: center;
+}
+
+.cyberpunk-input {
+  padding: 8px;
+  border: 1px solid #4d4d4d;
+  border-radius: 5px;
+  background-color: #2c3e50;
+  color: #fff;
+  width: 100%; /* Make the input fill the width of the container */
+}
+
+.cyberpunk-button {
+  background-color: #0F0;
+  color: #000;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  width: 100%; /* Make the button fill the width of the container */
+}
+
+.cyberpunk-button:hover {
+  background-color: #0d8d0d;
+}
+
+.cyberpunk-error-message,
+.cyberpunk-error {
+  color: #e74c3c;
+  margin-top: 10px;
+  text-align: center;
 }

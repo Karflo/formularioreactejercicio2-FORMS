@@ -37,13 +37,14 @@ const ApiCrud = () => {
   };
 
   const borrarPost = (postId) => { //Borramos el post a traves de la id del Post
-    borrarComentariospost(PATHCOMMENT,postId)
+    borrarComentariospost( postId)
     .then(() => borrar(PATH, postId))
     .then(() => actualizarDatos());
     
   };
 
   const introducirUsuario = () => {
+    console.log(editarPost)
     if (editarPost) {
       modificar(PATH, editarPost)
       .then(() => actualizarDatos())
