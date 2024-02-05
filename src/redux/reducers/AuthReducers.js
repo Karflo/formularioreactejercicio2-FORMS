@@ -89,13 +89,3 @@ const userReducer = (state = initialState, action) => {
 export default userReducer;
 
    
- /*
-    case logOut.fulfilled:
-      return {
-        ...state,
-        loading: false,
-        user: null,
-        error: null,
-        isAuthenticated: false
-      };
-*/

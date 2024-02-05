@@ -7,6 +7,7 @@ const comments = "/comments";
 const commentYpost = "/posts/comments";
 
 export function get(path) {  
+  console.log(BASE_URL + path)
     return axios.get(BASE_URL + path, {
       headers: {
         'Accept': 'application/json',
@@ -22,6 +23,9 @@ export function get(path) {
   }
 
   export function post(path, data) {  
+    console.log(BASE_URL);
+    console.log(data);
+    console.log(path);
     return axios.post(BASE_URL + path, data, {
       headers: {
         'Accept': 'application/json',
@@ -50,9 +54,7 @@ export function get(path) {
     });
   }
 
-  export function borrarComentariospost(id) {  
-    console.log("FUNCIONA")
-    console.log(BASE_URL + "/posts/" + id + "/comments" )
+  export function borrarComentariospost(id) {   //Aqui genera error al borrar post por completo
     return axios.delete(BASE_URL + "/posts/" + id + "/comments", {
       headers: {
         'Accept': 'application/json',

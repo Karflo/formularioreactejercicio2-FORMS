@@ -3,8 +3,10 @@ import "./ApiCrud.css";
 import { Container, Form, Button, Card } from "react-bootstrap";
 import { get, post, borrar, modificar, borrarComentariospost } from "../../api/requests/requests";
 import Comments from "./Comments";
+import { connect } from 'react-redux';  
+import { getActionRequestStarted, getActionRequestSuccess, postActionRequestFailed, postActionRequestStarted, postActionRequestSuccess } from "../../redux/actions/post.action";
 
-const ApiCrud = () => {
+const ApiCrud = ( props ) => {
   const userID = 57;
   const [posts, setPost] = useState(null);
   const [editarPost, setEditarPost] = useState(null);
@@ -21,11 +23,8 @@ const ApiCrud = () => {
 
 
   useEffect(() => {
-    get(PATH)
-      .then((posts) => {
-        setPost(posts);
-      })
-      .catch(console.log);
+    props.onLoadGetStarted(PATH); // Dispara la acción de solicitud GET
+
   },[])
 
   const actualizarDatos = () => { //Actualizo los datos de los posts
@@ -37,14 +36,15 @@ const ApiCrud = () => {
   };
 
   const borrarPost = (postId) => { //Borramos el post a traves de la id del Post
-    borrarComentariospost( postId)
+    borrarComentariospost(postId)
     .then(() => borrar(PATH, postId))
     .then(() => actualizarDatos());
     
   };
 
+
+
   const introducirUsuario = () => {
-    console.log(editarPost)
     if (editarPost) {
       modificar(PATH, editarPost)
       .then(() => actualizarDatos())
@@ -55,16 +55,14 @@ const ApiCrud = () => {
       })
         .catch((error) => console.error('Error al editar el post:', error));
     } else{
-      post(PATH, nuevoPost)
-      .then(() => actualizarDatos())
+      props
+      .onLoadPostStarted(nuevoPost)
+      /*.then(() => actualizarDatos())
       .then(() => {
         const newPost = [...posts] //Traigo el array desestructurado
         newPost.push(nuevoPost) //Pusheo el nuevo usuario al final
         setPost(newPost) // Introduzco el usuario nuevo en el array
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      })*/
   };
 }
 
@@ -150,4 +148,18 @@ const ApiCrud = () => {
   );
 };
 
-export default ApiCrud;
+const mapStateToProps = (state) => ({
+  loading: state.postState.loading,
+  error: state.postState.error,
+  post: state.postState.post
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onLoadPostStarted: (nuevoPost) => dispatch(postActionRequestStarted(nuevoPost)),
+  onLoadPostSuccess: (post) => dispatch(postActionRequestSuccess(post)),
+  onLoadPostFailed: (error) => dispatch(postActionRequestFailed(error)),
+  onLoadGetStarted: (url) => dispatch(getActionRequestStarted(url)), // Nueva acción para solicitudes GET
+
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ApiCrud);
