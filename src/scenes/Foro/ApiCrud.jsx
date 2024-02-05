@@ -4,7 +4,7 @@ import { Container, Form, Button, Card } from "react-bootstrap";
 import { get, post, borrar, modificar, borrarComentariospost } from "../../api/requests/requests";
 import Comments from "./Comments";
 import { connect } from 'react-redux';  
-import { getActionRequestStarted, getActionRequestSuccess, postActionRequestFailed, postActionRequestStarted, postActionRequestSuccess } from "../../redux/actions/post.action";
+import { getActionRequestFailed, getActionRequestStarted, getActionRequestSuccess, postActionRequestFailed, postActionRequestStarted, postActionRequestSuccess } from "../../redux/actions/post.action";
 
 const ApiCrud = ( props ) => {
   const userID = 57;
@@ -24,8 +24,10 @@ const ApiCrud = ( props ) => {
 
   useEffect(() => {
     props.onLoadGetStarted(PATH); // Dispara la acción de solicitud GET
+    setPost(props.posts);
 
   },[])
+
 
   const actualizarDatos = () => { //Actualizo los datos de los posts
     get(PATH)
@@ -159,7 +161,8 @@ const mapDispatchToProps = (dispatch) => ({
   onLoadPostSuccess: (post) => dispatch(postActionRequestSuccess(post)),
   onLoadPostFailed: (error) => dispatch(postActionRequestFailed(error)),
   onLoadGetStarted: (url) => dispatch(getActionRequestStarted(url)), // Nueva acción para solicitudes GET
-
+  onLoadGetSuccess: (posts) => dispatch(getActionRequestSuccess(posts)),
+  onLoadPostFailed: (error) => dispatch(getActionRequestFailed(error))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ApiCrud);

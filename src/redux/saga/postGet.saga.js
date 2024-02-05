@@ -1,11 +1,12 @@
 import { put, call } from "redux-saga/effects";
 import { postActionRequestSuccess } from "../actions/post.action";
 import {get} from '../../api/requests/requests'
+import {posts} from '../../constants/urls'
 // Función que maneja la acción de solicitud GET de posts
 function* handleGetPostRequest(action) {
     try {
-    console.log(get)
-      const response = yield call(get);
+      const response = yield call(get, posts);
+      console.log(response)
       yield put(postActionRequestSuccess(response));
   
     } catch (error) {
